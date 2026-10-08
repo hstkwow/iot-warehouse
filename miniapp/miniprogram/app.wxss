@@ -1,0 +1,192 @@
+/** app.wxss **/
+page {
+  --primary-color: #5D87FF;
+  --primary-gradient: linear-gradient(135deg, #5D87FF 0%, #4A6CF7 100%);
+  --color-success: #34C759;
+  --color-warning: #FF9F0A;
+  --color-danger: #FF3B30;
+  --color-bg-page: #FAFAFA;
+  --color-bg-card: rgba(255, 255, 255, 0.8);
+  --color-bg-input: rgba(255, 255, 255, 0.9);
+  --color-text-main: #1D1D1F;
+  --color-text-regular: #666666;
+  --color-text-minor: #8E8E93;
+  --color-border: rgba(0, 0, 0, 0.05);
+
+  background-color: var(--color-bg-page);
+  color: var(--color-text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+view, text, scroll-view, swiper, button, form, input, textarea, label, navigator, image {
+  box-sizing: border-box;
+}
+
+.container {
+  min-height: 100vh;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pb-space {
+  padding-bottom: 120rpx;
+}
+
+/* 常用卡片 */
+.card {
+  background-color: var(--color-bg-card);
+  border-radius: 40rpx;
+  padding: 32rpx;
+  margin: 32rpx 48rpx;
+  box-shadow: 0 16rpx 48rpx -16rpx rgba(0, 0, 0, 0.06);
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Apple 风格按钮 */
+.btn-primary {
+  width: auto !important;
+  height: 96rpx;
+  line-height: 96rpx;
+  background: var(--primary-gradient);
+  color: #ffffff;
+  border-radius: 24rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  padding: 0 48rpx;
+  box-shadow: 0 16rpx 32rpx rgba(93, 135, 255, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+.btn-primary:active {
+  transform: scale(0.96);
+  opacity: 0.8;
+  box-shadow: 0 8rpx 16rpx rgba(93, 135, 255, 0.2);
+}
+.btn-primary[disabled] {
+  background: #F2F2F7 !important;
+  color: #C7C7CC !important;
+  box-shadow: none !important;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: var(--color-text-main);
+}
+
+/* 常用布局 */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* 常用文本 */
+.text-bold {
+  font-weight: bold;
+}
+.text-muted {
+  color: var(--color-text-minor);
+}
+.text-primary {
+  color: var(--primary-color);
+}
+.text-success {
+  color: var(--color-success);
+}
+.text-warning {
+  color: var(--color-warning);
+}
+.text-danger {
+  color: var(--color-danger);
+}
+.text-sm {
+  font-size: 24rpx;
+}
+.text-md {
+  font-size: 28rpx;
+}
+.text-lg {
+  font-size: 32rpx;
+}
+.text-xl {
+  font-size: 36rpx;
+}
+
+/* 徽标/标签 */
+.badge {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  font-size: 20rpx;
+  border-radius: 8rpx;
+  background: var(--color-bg-page);
+  color: var(--color-text-regular);
+}
+.badge-blue {
+  background: rgba(41, 121, 255, 0.1);
+  color: var(--primary-color);
+}
+.badge-red {
+  background: rgba(250, 53, 52, 0.1);
+  color: var(--color-danger);
+}
+.badge-green {
+  background: rgba(24, 181, 102, 0.1);
+  color: var(--color-success);
+}
+.badge-orange {
+  background: rgba(255, 158, 15, 0.1);
+  color: var(--color-warning);
+}
+
+/* 按钮重置 */
+.btn {
+  /* ... */
+}
+
+/* 兼容SVG和Emoji替换 */
+.css-icon {
+  display: inline-block;
+  width: 48rpx;
+  height: 48rpx;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+/* Base64 编码的 SVG 图标 */
+.icon-temp { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF5722'%3E%3Cpath d='M15 13V5a3 3 0 0 0-6 0v8a5 5 0 1 0 6 0zm-3-9a1 1 0 0 1 1 1v3h-2V5a1 1 0 0 1 1-1z'/%3E%3C/svg%3E"); }
+.icon-water { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300BCD4'%3E%3Cpath d='M12 2c0 0-8 7.5-8 13a8 8 0 1 0 16 0c0-5.5-8-13-8-13z'/%3E%3C/svg%3E"); }
+.icon-box { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M21 16.5l-9 5.25-9-5.25V7.5L12 2.25l9 5.25v9zM12 4.5l-6.5 3.75L12 13.5l6.5-3.75L12 4.5z'/%3E%3C/svg%3E"); }
+.icon-wifi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF9800'%3E%3Cpath d='M12 3a18.9 18.9 0 0 0-13.4 5.3l1.4 1.4A16.9 16.9 0 0 1 12 5c4.7 0 9 1.9 12 5l1.4-1.4A18.9 18.9 0 0 0 12 3zm0 5a13.9 13.9 0 0 0-9.9 4.1l1.4 1.4c2.3-2.3 5.3-3.5 8.5-3.5s6.2 1.2 8.5 3.5l1.4-1.4A13.9 13.9 0 0 0 12 8zm0 5a8.9 8.9 0 0 0-6.4 2.6L7 17a6.9 6.9 0 0 1 10 0l1.4-1.4A8.9 8.9 0 0 0 12 13zm0 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4z'/%3E%3C/svg%3E"); }
+.icon-scan { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231989fa'%3E%3Cpath d='M4 4h4v2H6v2H4V4zm16 0h-4v2h2v2h2V4zM4 20h4v-2H6v-2H4v4zm16 0h-4v-2h2v-2h2v4zM8 8h8v8H8V8z'/%3E%3C/svg%3E"); }
+.icon-alert { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23F44336'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E"); }
+.icon-refresh { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M17.65 6.35A7.95 7.95 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E"); }
+.icon-setting { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239C27B0'%3E%3Cpath d='M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z'/%3E%3C/svg%3E"); }
+
+/* Force canvas components under custom tab bar */
+.chart-wrap {
+  z-index: 0 !important; 
+}
+ec-canvas {
+  z-index: 2 !important;
+}

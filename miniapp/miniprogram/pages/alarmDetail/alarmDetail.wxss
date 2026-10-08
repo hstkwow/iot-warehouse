@@ -1,0 +1,282 @@
+page {
+  background-color: #F2F2F7;
+  font-family: -apple-system, "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", sans-serif;
+}
+
+.ios-page {
+  position: relative;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 极简动态光晕（不再突兀） */
+.bg-blur-circle {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+  opacity: 0.15;
+  transform: translate3d(0, 0, 0); 
+  animation: floatLight 20s infinite ease-in-out alternate;
+  pointer-events: none;
+}
+.bg-azure {
+  width: 600rpx;
+  height: 600rpx;
+  background: radial-gradient(circle, rgba(0,122,255,1) 0%, rgba(0,122,255,0) 70%);
+  top: -10%;
+  left: -20%;
+}
+.bg-orange {
+  width: 500rpx;
+  height: 500rpx;
+  background: radial-gradient(circle, rgba(255,149,0,1) 0%, rgba(255,149,0,0) 70%);
+  bottom: 20%;
+  right: -20%;
+  animation-delay: -5s;
+}
+
+@keyframes floatLight {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(50rpx) scale(1.1); }
+  100% { transform: translateY(-30rpx) scale(0.9); }
+}
+
+.content-body {
+  position: relative;
+  z-index: 10;
+  padding-bottom: 60rpx;
+}
+
+/* --- 顶部 Apple Wallet 风格主排版 --- */
+.ios-main-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx 60rpx;
+}
+
+.hero-icon-container {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  box-shadow: 0 16rpx 32rpx rgba(0, 0, 0, 0.05); /* 极其柔和的弥散投影 */
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.hero-icon-container t-icon {
+  margin-top: 4rpx; /* 修正居中感 */
+}
+
+.hero-red { background: linear-gradient(135deg, #FF453A, #FF3B30); }
+.hero-orange { background: linear-gradient(135deg, #FF9F0A, #FF9500); }
+.hero-yellow { background: linear-gradient(135deg, #FFD60A, #FFCC00); }
+
+.hero-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -1rpx;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 30rpx;
+  color: #8E8E93;
+  margin-top: 12rpx;
+  font-weight: 400;
+}
+
+.resolve-summary {
+  margin-top: 18rpx;
+  padding: 10rpx 20rpx;
+  background: rgba(52, 199, 89, 0.1);
+  border-radius: 999rpx;
+}
+
+.resolve-summary-text {
+  font-size: 24rpx;
+  color: #248a3d;
+}
+
+/* --- 分组 Section 标题 --- */
+.ios-section-header {
+  font-size: 28rpx;
+  color: #6E6E73;
+  text-transform: uppercase;
+  margin: 0 0 16rpx 64rpx;
+  font-weight: 400;
+  letter-spacing: 0.5rpx;
+}
+
+/* --- iOS Inset Grouped 卡片 --- */
+.ios-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 0 32rpx 48rpx;
+  overflow: hidden;
+  box-shadow: none; /* Apple 原生卡片无阴影，全靠背景色差 */
+  transform: translate3d(0, 0, 0); /* 开启硬件加速解决页面转场卡顿 */
+}
+
+.ios-card-hover {
+  background: #E5E5EA;
+}
+
+.ios-card-body {
+  padding: 32rpx;
+}
+
+.ios-alert-box {
+  /* 移除生硬原色的border-left，用更柔和的背景色传达报警意图 */
+  background-color: #FFFFFF; 
+}
+
+.content-text {
+  font-size: 34rpx;
+  color: #1C1C1E;
+  line-height: 1.5;
+  font-weight: 400;
+  word-break: break-all;
+  letter-spacing: 0rpx;
+}
+.remark-text {
+  color: #8E8E93;
+  font-size: 32rpx;
+}
+
+/* --- 列表布局 --- */
+.ios-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 24rpx 32rpx;
+  box-sizing: border-box;
+}
+
+.ios-label {
+  font-size: 34rpx;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.ios-value {
+  font-size: 34rpx;
+  color: #8E8E93;
+  text-align: right;
+  word-break: break-all;
+  flex: 1;
+  padding-left: 24rpx;
+}
+
+.flex-align {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 28rpx;
+}
+
+.text-red { color: #FF3B30 !important; font-weight: 500; }
+.text-green { color: #34C759 !important; font-weight: 500; }
+.text-orange { color: #FF9500 !important; font-weight: 500; }
+.text-blue { color: #007AFF !important; font-weight: 500; }
+
+/* 状态圆点 */
+.level-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+}
+.dot-red { background-color: #FF3B30; }
+.dot-orange { background-color: #FF9500; }
+.dot-blue { background-color: #007AFF; }
+
+/* Action 按钮排版 */
+.action-row {
+  justify-content: space-between;
+}
+.ios-action-text {
+  font-size: 34rpx;
+  color: #007AFF;
+}
+
+/* iOS 分割线: Apple 原生规范起点位于文字左对齐处 */
+.ios-divider {
+  height: 1px;
+  background-color: rgba(60, 60, 67, 0.18);
+  margin-left: 32rpx;
+  transform: scaleY(0.5); /* 软化物理像素，实现真正的 0.5px */
+  transform-origin: bottom;
+}
+
+/* --- 输入区与字数统计 --- */
+.ios-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 240rpx;
+  padding: 32rpx 32rpx 16rpx;
+  font-size: 34rpx;
+  color: #000000;
+  line-height: 1.5;
+}
+.ios-ph {
+  color: #C7C7CC;
+}
+.ios-word-count {
+  text-align: right;
+  font-size: 26rpx;
+  color: #C7C7CC;
+  padding: 0 32rpx 24rpx;
+}
+
+/* --- 底部主按钮区 --- */
+.ios-submit-area {
+  margin: 64rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ios-btn-primary {
+  width: 100%;
+  height: 104rpx;
+  background: #007AFF;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 34rpx;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.ios-btn-hover {
+  opacity: 0.8;
+}
+
+.ios-footer-tip {
+  font-size: 24rpx;
+  color: #8E8E93;
+  margin-top: 16rpx;
+}
+
+.auto-tip-card {
+  margin-top: -16rpx;
+}
+
+.auto-tip-text {
+  font-size: 28rpx;
+  color: #8E8E93;
+  line-height: 1.6;
+}

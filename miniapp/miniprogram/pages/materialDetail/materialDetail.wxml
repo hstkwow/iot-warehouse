@@ -1,0 +1,224 @@
+<view class="dashboard-container">
+  <view class="bg-blur-circle bg-azure"></view>
+  <view class="bg-blur-circle bg-teal"></view>
+
+  <!-- 顶部自定义导航 -->
+  <view class="custom-nav-wrap" style="padding-top: {{statusBarHeight}}px;">
+    <view class="custom-nav">
+      <view class="nav-left" bind:tap="navBack">
+        <t-icon name="chevron-left" size="60rpx" color="#007AFF" />
+        <text class="nav-back-text">列表</text>
+      </view>
+      <view class="nav-title">物资详情</view>
+    </view>
+  </view>
+
+  <t-toast id="t-toast" />
+  <t-dialog id="t-dialog" />
+
+  <scroll-view scroll-y class="content-scroll" style="height: calc(100vh - 88rpx - {{statusBarHeight}}px);">
+    <view class="card profile-card">
+      <view class="profile-img-wrap" bind:tap="handleChangeImage" hover-class="apple-hover-img">
+        <image wx:if="{{material.imageUrl}}" src="{{material.imageUrl}}" mode="aspectFill" class="profile-img" />
+        <view wx:else class="profile-img no-img">暂无图片</view>
+        <view class="edit-text">编辑照片</view>
+      </view>
+      <view class="profile-info">
+        <view class="profile-title">{{material.name || '--'}}</view>
+        <view class="profile-code">编号: {{material.materialCode || '--'}}</view>
+      </view>
+    </view>
+
+    <view class="section-title">详细信息</view>
+    <view class="card apple-form-group">
+      <view class="apple-form-item">
+        <text class="label">物资名称</text>
+        <input class="value-input" value="{{material.name}}" bindinput="onFieldChange" data-field="name" placeholder="未命名" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item" bind:tap="showCategoryPicker" hover-class="apple-hover">
+        <text class="label">物资分类</text>
+        <view class="value-text {{material.categoryName ? 'has-value' : 'no-value'}}">{{material.categoryName || '点击选择分类'}}</view>
+        <t-icon name="chevron-right" size="40rpx" color="#C7C7CC" class="arrow" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">规格型号</text>
+        <input class="value-input" value="{{material.spec}}" bindinput="onFieldChange" data-field="spec" placeholder="请输入限制" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">计量单位</text>
+        <input class="value-input" value="{{material.unit}}" bindinput="onFieldChange" data-field="unit" placeholder="如：件、个" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">最低库存</text>
+        <input class="value-input" value="{{material.minStock}}" type="digit" bindinput="onFieldChange" data-field="minStock" placeholder="下限阈值" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">最高库存</text>
+        <input class="value-input" value="{{material.maxStock}}" type="digit" bindinput="onFieldChange" data-field="maxStock" placeholder="上限阈值" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">临期预警(天)</text>
+        <input class="value-input" value="{{material.expiryWarningDays || ''}}" type="number" bindinput="onFieldChange" data-field="expiryWarningDays" placeholder="输入预警天数" placeholder-class="apple-placeholder" />
+      </view>
+      <view class="apple-form-item">
+        <text class="label">创建时间</text>
+        <view class="value-text read-only">{{material.createTime || '--'}}</view>
+      </view>
+      <view class="apple-form-item">
+        <text class="label">当前库存</text>
+        <view class="value-text has-value">{{material.stockQuantity || 0}} {{material.unit || ''}}</view>
+      </view>
+      <view class="apple-form-item no-border">
+        <text class="label">更新时间</text>
+        <view class="value-text read-only">{{material.updateTime || '--'}}</view>
+      </view>
+    </view>
+
+    <view class="action-bar">
+      <view class="apple-btn primary" hover-class="apple-btn-hover" bind:tap="handleSave">保存</view>
+      <view class="apple-btn secondary" hover-class="apple-btn-hover" bind:tap="showRfidDialog">写卡</view>
+      <view class="apple-btn danger" hover-class="apple-btn-hover" bind:tap="handleDelete">删除</view>
+    </view>
+
+    <view class="bottom-pad"></view>
+  </scroll-view>
+
+  <!-- 写卡准备底部弹窗 -->
+  <t-popup visible="{{rfidDialogVisible}}" bind:visible-change="onVisibleChangeRfidPrepare" placement="bottom">
+    <view class="popup-wrapper">
+      <view class="popup-header">
+        <text class="popup-title">写入 RFID 卡</text>
+        <t-icon class="popup-close" name="close" size="48rpx" bind:tap="onCancelRfidPrepare" />
+      </view>
+      <scroll-view scroll-y class="popup-content rfid-popup-scroll">
+        <!-- 头部信息卡片 -->
+        <view class="rfid-info-card">
+          <view class="info-row">
+            <text class="info-label">物资名称</text>
+            <text class="info-value">{{material.name || '--'}}</text>
+            <text class="info-label">物资编码</text>
+            <text class="info-value text-right">{{material.materialCode || '--'}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">规格型号</text>
+            <text class="info-value">{{material.spec || '--'}}</text>
+            <text class="info-label">单位</text>
+            <text class="info-value text-right">{{material.unit || '--'}}</text>
+          </view>
+        </view>
+
+        <view class="card apple-form-group popup-form">
+          <view class="apple-form-item" hover-class="apple-hover" bind:tap="onOpenDevicePicker">
+            <text class="label">写入设备</text>
+            <text class="value-text {{selectedDeviceName ? 'has-value' : 'no-value'}}">{{selectedDeviceName || '请选择在线设备'}}</text>
+            <t-icon name="chevron-right" class="arrow" color="#C7C7CC" size="40rpx" />
+          </view>
+          
+          <view class="apple-form-item">
+            <text class="label">数量</text>
+            <input class="value-input" value="{{rfidForm.quantity}}" type="digit" bindinput="onRfidFieldChange" data-field="quantity" placeholder="输入数量" placeholder-class="apple-placeholder" />
+          </view>
+          <view class="apple-form-item" hover-class="apple-hover" bind:tap="onOpenAreaPicker">
+            <text class="label">区域</text>
+            <text class="value-text {{selectedAreaName ? 'has-value' : 'no-value'}}">{{selectedAreaName || '请选择区域'}}</text>
+            <t-icon name="chevron-right" class="arrow" color="#C7C7CC" size="40rpx" />
+          </view>
+          <view class="apple-form-item" hover-class="apple-hover" bind:tap="onOpenLocationPicker">
+            <text class="label">库位</text>
+            <text class="value-text {{selectedLocationName ? 'has-value' : 'no-value'}}">{{selectedLocationName || '请选择库位'}}</text>
+            <t-icon name="chevron-right" class="arrow" color="#C7C7CC" size="40rpx" />
+          </view>
+          <view class="apple-form-item">
+            <text class="label">批次号</text>
+            <input class="value-input" value="{{rfidForm.batchNo}}" bindinput="onRfidFieldChange" data-field="batchNo" placeholder="可留空" placeholder-class="apple-placeholder" />
+          </view>
+          <view class="apple-form-item last-item" hover-class="apple-hover" bind:tap="onOpenDatePicker">
+            <text class="label">有效期</text>
+            <text class="value-text {{rfidForm.expiryDate ? 'has-value' : 'no-value'}}">{{rfidForm.expiryDate || '请选择有效日期'}}</text>
+            <t-icon name="chevron-right" class="arrow" color="#C7C7CC" size="40rpx" />
+          </view>
+        </view>
+
+      </scroll-view>
+      <view class="popup-footer">
+        <view class="apple-btn primary block" hover-class="apple-btn-hover" bind:tap="onConfirmRfIdWriteFull">写入卡片</view>
+      </view>
+    </view>
+  </t-popup>
+
+  <!-- 选择设备写卡动作表 / 模拟Picker -->
+  <t-picker
+    visible="{{devicePickerVisible}}"
+    value="{{currentDeviceId}}"
+    title="选择写入设备(须在线)"
+    cancelBtn="取消"
+    confirmBtn="确定"
+    bind:change="onDevicePickerChange"
+    bind:confirm="onDevicePickerConfirm"
+    bind:cancel="onDevicePickerCancel"
+  >
+    <t-picker-item options="{{deviceOptions}}" />
+  </t-picker>
+
+  <!-- 分类选择器 -->
+  <t-picker
+    visible="{{categoryPickerVisible}}"
+    value="{{[material.categoryId]}}"
+    title="选择物资分类"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    bind:confirm="onCategoryPickerConfirm"
+    bind:cancel="onCategoryPickerCancel"
+  >
+    <t-picker-item options="{{categoryOptions}}" />
+  </t-picker>
+
+</view>
+
+
+  <!-- 区域选择器 -->
+  <t-picker
+    visible="{{areaPickerVisible}}"
+    value="{{currentAreaId}}"
+    title="选择区域"
+    cancelBtn="取消"
+    confirmBtn="确定"
+    bind:change="onAreaPickerChange"
+    bind:confirm="onAreaPickerConfirm"
+    bind:cancel="onAreaPickerCancel"
+  >
+    <t-picker-item options="{{areaOptions}}" />
+  </t-picker>
+
+  <!-- 库位选择器 -->
+  <t-picker
+    visible="{{locationPickerVisible}}"
+    value="{{currentLocationId}}"
+    title="选择库位"
+    cancelBtn="取消"
+    confirmBtn="确定"
+    bind:change="onLocationPickerChange"
+    bind:confirm="onLocationPickerConfirm"
+    bind:cancel="onLocationPickerCancel"
+  >
+    <t-picker-item options="{{locationOptions}}" />
+  </t-picker>
+  <!-- 日期选择器 -->
+  <t-date-time-picker
+    title="选择有效期"
+    visible="{{datePickerVisible}}"
+    mode="date"
+    format="YYYY-MM-DD"
+    value="{{currentDate}}"
+    bind:change="onDatePickerConfirm"
+    bind:cancel="onDatePickerCancel"
+  />
+
+  <!-- 专门提供一个明显的写入加载弹窗 -->
+  <t-dialog
+    visible="{{writingDialogVisible}}"
+    title="等待设备写入"
+    content="请将 RFID 卡片靠近当前选中的设备感应区\n\n剩余时间: {{writingCountdown}}秒"
+    confirm-btn="停止等待"
+    bind:confirm="onCancelWriting"
+  />

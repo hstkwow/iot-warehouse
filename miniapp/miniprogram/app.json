@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/category/category",
+    "pages/devices/devices",
+    "pages/stock/stock",
+    "pages/data/data",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/materialAdd/materialAdd",
+    "pages/materialDetail/materialDetail",
+    "pages/ioRecordDetail/ioRecordDetail",
+    "pages/deviceDetail/deviceDetail",
+    "pages/deviceConfig/deviceConfig",
+    "pages/alarmDetail/alarmDetail"
+  ],
+  "window": {
+    "backgroundColor": "#FAFAFA",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#FAFAFA",
+    "navigationBarTitleText": "智能仓储系统",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#A0A0A5",
+    "selectedColor": "#5D87FF",
+    "backgroundColor": "#FAFAFA",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/devices/devices",
+        "text": "设备"
+      },
+      {
+        "pagePath": "pages/stock/stock",
+        "text": "库存"
+      },
+      {
+        "pagePath": "pages/data/data",
+        "text": "数据"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ],
+    "custom": true
+  },
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,107 @@
+:host {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  display: block;
+}
+
+.tab-shell {
+  padding: 0 24rpx calc(env(safe-area-inset-bottom) + 18rpx);
+  transition: opacity 0.25s ease, transform 0.28s ease, filter 0.28s ease;
+}
+
+.tab-shell--overlay {
+  opacity: 0;
+  transform: translateY(calc(env(safe-area-inset-bottom) + 220rpx));
+  filter: blur(1px);
+}
+
+.tab-bar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10rpx;
+  margin: 0 auto;
+  padding: 14rpx;
+  border-radius: 999rpx;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(246, 249, 255, 0.7) 100%);
+  border: 1rpx solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 18rpx 50rpx rgba(21, 44, 84, 0.16),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(180%) blur(28px);
+  -webkit-backdrop-filter: saturate(180%) blur(28px);
+  transition: background 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.tab-bar-wrap--overlay {
+  background:
+    linear-gradient(180deg, rgba(232, 236, 244, 0.88) 0%, rgba(225, 231, 241, 0.8) 100%);
+  box-shadow:
+    0 10rpx 28rpx rgba(21, 44, 84, 0.1),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.65);
+  filter: saturate(0.75) brightness(0.94);
+  pointer-events: none;
+}
+
+.tab-item {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 14rpx 8rpx 12rpx;
+  border-radius: 999rpx;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.tab-item--disabled {
+  pointer-events: none;
+}
+
+.tab-item__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(223, 236, 255, 0.78) 100%);
+  box-shadow:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.95),
+    0 10rpx 28rpx rgba(31, 107, 255, 0.12);
+}
+
+.tab-item__icon,
+.tab-item__label {
+  position: relative;
+  z-index: 1;
+}
+
+.tab-item__label {
+  max-width: 100%;
+  font-size: 22rpx;
+  line-height: 1;
+  color: #7a8599;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tab-item--active {
+  transform: translateY(-2rpx);
+}
+
+.tab-item--active .tab-item__glow {
+  opacity: 1;
+}
+
+.tab-item--active .tab-item__label {
+  color: #1f6bff;
+  font-weight: 600;
+}

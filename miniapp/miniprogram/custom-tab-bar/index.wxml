@@ -1,0 +1,23 @@
+<view class="tab-shell {{overlayActive ? 'tab-shell--overlay' : ''}}">
+  <view class="tab-bar-wrap {{overlayActive ? 'tab-bar-wrap--overlay' : ''}}">
+    <navigator
+      wx:for="{{list}}"
+      wx:key="value"
+      class="tab-item {{value === item.value ? 'tab-item--active' : ''}} {{overlayActive ? 'tab-item--disabled' : ''}}"
+      data-value="{{item.value}}"
+      url="{{item.path}}"
+      open-type="switchTab"
+      bindtap="onTabTap"
+    >
+      <view class="tab-item__glow"></view>
+      <view class="tab-item__icon">
+        <t-icon
+          name="{{item.icon}}"
+          size="44rpx"
+          color="{{value === item.value ? '#1F6BFF' : '#7A8599'}}"
+        />
+      </view>
+      <text class="tab-item__label">{{item.label}}</text>
+    </navigator>
+  </view>
+</view>

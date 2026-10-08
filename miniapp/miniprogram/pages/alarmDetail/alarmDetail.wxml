@@ -1,0 +1,141 @@
+<view class="ios-page">
+  <!-- 动态模糊背景（极简） -->
+  <view class="bg-blur-circle bg-azure"></view>
+  <view class="bg-blur-circle bg-orange"></view>
+
+  <view class="content-body">
+    <!-- 顶部中心头视图 (类似 Apple Pay 详情) -->
+    <view class="ios-main-header">
+      <view class="hero-icon-container {{alarm.alarmSource === 'stock' ? 'hero-orange' : (alarm.severity == 3 ? 'hero-red' : 'hero-yellow')}}">
+        <t-icon name="{{alarm.alarmSource === 'stock' ? 'app' : (alarm.severity == 3 ? 'error-circle' : 'warning-circle')}}" size="80rpx" color="#FFF" />
+      </view>
+      <text class="hero-title">{{alarm.alarmType || '系统告警'}}</text>
+      <text class="hero-subtitle">{{alarmDisplayTime || '未知发生时间'}}</text>
+      <block wx:if="{{alarm.status == 1}}">
+        <view class="resolve-summary">
+          <text class="resolve-summary-text">已归档 · {{alarm.resolveUser || '系统自动执行'}} · {{resolveDisplayTime || '未知'}}</text>
+        </view>
+      </block>
+    </view>
+
+    <!-- 告警内容 -->
+    <view class="ios-section-header">报警内容</view>
+    <view class="ios-card ios-alert-box">
+      <view class="ios-card-body content-text {{alarm.severity == 3 ? 'text-red' : (alarm.severity == 2 ? 'text-orange' : 'text-blue')}}">
+        {{alarm.originalContent || alarm.content || alarm.msg || '暂无详细告警内容'}}
+      </view>
+    </view>
+
+    <!-- 元数据 -->
+    <view class="ios-section-header">元数据与状态</view>
+    <view class="ios-card">
+      <view class="ios-list-item">
+        <text class="ios-label">业务来源</text>
+        <text class="ios-value">{{alarm.alarmSource === 'stock' ? '库存预警模块' : '环境监测设备'}}</text>
+      </view>
+      <view class="ios-divider"></view>
+
+      <view class="ios-list-item">
+        <text class="ios-label">危险定级</text>
+        <view class="ios-value flex-align">
+          <view class="level-dot {{alarm.severity == 3 ? 'dot-red' : (alarm.severity == 2 ? 'dot-orange' : 'dot-blue')}}"></view>
+          <text>{{alarm.severity == 3 ? '紧急' : (alarm.severity == 2 ? '严重' : '一般')}}</text>
+        </view>
+      </view>
+      <view class="ios-divider"></view>
+
+      <block wx:if="{{alarm.alarmSource === 'stock'}}">
+        <view class="ios-list-item">
+          <text class="ios-label">预警物资</text>
+          <text class="ios-value">{{alarm.shortTitle || '库存物资'}}</text>
+        </view>
+        <view class="ios-divider"></view>
+        
+        <view class="ios-list-item">
+          <text class="ios-label">存放区域</text>
+          <text class="ios-value">{{stockZone || '正在获取...'}}</text>
+        </view>
+        <view class="ios-divider"></view>
+        
+        <view class="ios-list-item">
+          <text class="ios-label">分配库位</text>
+          <view class="ios-value flex-align location-text">
+            <t-icon name="layers" size="32rpx" style="margin-right: 6rpx; opacity: 0.6;" />
+            <text>{{stockShelf || '正在拉取...'}}</text>
+          </view>
+        </view>
+        <view class="ios-divider"></view>
+      </block>
+
+      <block wx:if="{{alarm.deviceId}}">
+        <view class="ios-list-item">
+          <text class="ios-label">关联设备</text>
+          <text class="ios-value">{{deviceInfo ? deviceInfo.deviceName || '未命名设备' : '正在拉取...'}}</text>
+        </view>
+        <view class="ios-divider"></view>
+        
+        <block wx:if="{{deviceInfo && deviceInfo.location}}">
+          <view class="ios-list-item">
+            <text class="ios-label">报警地点</text>
+            <view class="ios-value flex-align location-text">
+              <text>{{deviceInfo.location}}</text>
+            </view>
+          </view>
+          <view class="ios-divider"></view>
+        </block>
+      </block>
+
+      <view class="ios-list-item">
+        <text class="ios-label">处理状态</text>
+        <text class="ios-value {{alarm.status == 0 ? 'text-red' : 'text-green'}}">
+          {{alarm.status == 0 ? '待处理' : '已解决'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 操作导航 -->
+    <view class="ios-card" hover-class="ios-card-hover" bindtap="navToTarget">
+      <view class="ios-list-item action-row">
+        <text class="ios-action-text">{{alarm.alarmSource === 'stock' ? '前往库存台账追溯排查' : '进入设备控制台进行诊断'}}</text>
+        <t-icon name="chevron-right" size="40rpx" color="#C7C7CC" />
+      </view>
+    </view>
+
+    <block wx:if="{{alarm.status == 0 && alarm.alarmSource === 'stock'}}">
+      <view class="ios-card auto-tip-card">
+        <view class="ios-card-body auto-tip-text">
+          当前为库存类告警，系统会根据库存水平自动恢复。请前往库存台账核对并补充物资。
+        </view>
+      </view>
+    </block>
+
+    <!-- 已解决：处理档案 -->
+    <block wx:if="{{alarm.status == 1}}">
+      <view class="ios-section-header">处理措施与现场记录</view>
+      <view class="ios-card">
+        <view class="ios-card-body content-text remark-text">
+          {{alarm.resolveRemark || '无详细记录'}}
+        </view>
+      </view>
+    </block>
+
+    <!-- 待处理：底部操作与记录区 -->
+    <block wx:if="{{alarm.status == 0 && alarm.alarmSource !== 'stock'}}">
+      <view class="ios-section-header">执行签收与解决记录登记</view>
+      <view class="ios-card">
+        <textarea class="ios-textarea" placeholder="在此详细描述您的排查过程及处理方式 (如更换传感器、补充库存等)..." placeholder-class="ios-ph" maxlength="200" bindinput="handleInputRemark" value="{{resolveRemark}}"></textarea>
+        <view class="ios-word-count">{{resolveRemark.length || 0}}/200</view>
+      </view>
+
+      <view class="ios-submit-area">
+        <view class="ios-btn-primary" bindtap="handleResolve" hover-class="ios-btn-hover">
+          标记为已解决并归档
+        </view>
+        <text class="ios-footer-tip">提交后系统将强制附加您的身份签名</text>
+      </view>
+    </block>
+    
+    <!-- 底部垫高 -->
+    <view style="height: 120rpx;"></view>
+  </view>
+</view>

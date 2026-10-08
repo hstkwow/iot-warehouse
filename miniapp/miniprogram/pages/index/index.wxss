@@ -1,0 +1,369 @@
+page {
+  background-color: #F2F2F7;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, "PingFang SC", sans-serif;
+  box-sizing: border-box;
+}
+
+.dashboard {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 240rpx);
+}
+
+/* Apple Vision Pro 风格光晕底色 */
+.ambient-light {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0); /* 硬件加速，防止页面过渡时严重掉帧 */
+}
+.blue {
+  width: 550rpx;
+  height: 550rpx;
+  background: radial-gradient(circle, rgba(0,122,255,1) 0%, rgba(0,122,255,0) 70%);
+  top: 150rpx;
+  left: -100rpx;
+  animation: pulseBlue 14s ease-in-out infinite alternate;
+}
+.teal {
+  width: 480rpx;
+  height: 480rpx;
+  background: radial-gradient(circle, rgba(52,199,89,1) 0%, rgba(52,199,89,0) 70%);
+  top: 1050rpx;
+  right: -50rpx;
+  animation: pulseTeal 16s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes pulseBlue {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(40rpx, 60rpx); }
+}
+@keyframes pulseTeal {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-40rpx, -40rpx); }
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+/* 头部 Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 120px 40rpx 40rpx;
+}
+
+.greeting-sub {
+  display: block;
+  font-size: 24rpx;
+  color: #8E8E93;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+  text-transform: uppercase;
+  margin-bottom: 12rpx;
+}
+
+.greeting-main {
+  display: block;
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #1C1C1E;
+  letter-spacing: 1rpx;
+}
+
+/* 状态药丸 Status Pill */
+.status-pill {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  border-radius: 100rpx;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.5px solid rgba(255, 255, 255, 0.9);
+  font-size: 24rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  transform: translate3d(0, 0, 0); /* 开启硬件加速解决跳转卡顿 */
+}
+.status-pill .dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+}
+.status-pill.online { color: #1C1C1E; }
+.status-pill.online .dot { background: #34C759; box-shadow: 0 0 10rpx rgba(52, 199, 89, 0.5); }
+.status-pill.offline { color: #FF3B30; }
+.status-pill.offline .dot { background: #FF3B30; box-shadow: 0 0 10rpx rgba(255, 59, 48, 0.5); }
+
+/* 标题 */
+.section-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1C1C1E;
+  margin: 40rpx 40rpx 24rpx;
+  letter-spacing: 0.5rpx;
+}
+
+/* 带小工具的标题 Section Header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 56rpx 40rpx 24rpx;
+}
+.section-header .section-title {
+  margin: 0;
+}
+
+/* 苹果核心高斯模糊卡片 */
+.glass-card {
+  margin: 0 32rpx;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 40rpx;
+  border: 0.5px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transform: translate3d(0, 0, 0); /* 强制硬件加速缓解列表渲染卡顿 */
+}
+
+/* 统计网格 2x2 CSS Grid */
+.stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  width: 50%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 36rpx 32rpx;
+  position: relative;
+}
+
+/* 优雅的分割线 (0.5px) */
+.stat-item:nth-child(odd) { 
+  border-right: 0.5px solid rgba(60, 60, 67, 0.08); 
+}
+.stat-item:not(:nth-last-child(-n+2)) { 
+  border-bottom: 0.5px solid rgba(60, 60, 67, 0.08); 
+}
+
+/* 图标容器区 */
+.stat-icon-wrapper {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+.blue-bg { background: rgba(0, 122, 255, 0.1); }
+.green-bg { background: rgba(52, 199, 89, 0.1); }
+.orange-bg { background: rgba(255, 149, 0, 0.1); }
+.purple-bg { background: rgba(175, 82, 222, 0.1); }
+.teal-bg { background: rgba(48, 176, 199, 0.1); }
+.red-bg { background: rgba(255, 59, 48, 0.1); }
+.indigo-bg { background: rgba(88, 86, 214, 0.1); }
+.yellow-bg { background: rgba(255, 204, 0, 0.1); }
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #8E8E93;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.stat-value {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #1C1C1E;
+  display: flex;
+  align-items: baseline;
+  letter-spacing: -1rpx;
+}
+
+.stat-value .unit {
+  font-size: 24rpx;
+  color: #8E8E93;
+  font-weight: 500;
+  margin-left: 8rpx;
+  letter-spacing: 0;
+}
+
+/* iOS Segment Control 切换按钮 */
+.ios-segment {
+  position: relative;
+  display: flex;
+  background: rgba(118, 118, 128, 0.12);
+  padding: 4rpx;
+  border-radius: 16rpx;
+  width: 250rpx;
+  height: 60rpx;
+  box-sizing: border-box;
+}
+
+.segment-pill {
+  position: absolute;
+  top: 4rpx;
+  bottom: 4rpx;
+  width: calc(50% - 4rpx);
+  background: #FFFFFF;
+  border-radius: 12rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  transition: transform 0.25s cubic-bezier(0.3, 0.1, 0.1, 1);
+  z-index: 1;
+}
+.segment-pill.left { transform: translateX(0); }
+.segment-pill.right { transform: translateX(100%); }
+
+.segment-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #8E8E93;
+  z-index: 2;
+  transition: color 0.2s;
+  position: relative;
+}
+.segment-btn.active { color: #1C1C1E; }
+
+/* 告警列表区 */
+.list-card {
+  margin-top: 32rpx;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 32rpx 20rpx;
+}
+
+.list-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1C1C1E;
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+}
+
+.list-badge {
+  font-size: 24rpx;
+  font-weight: 700;
+  padding: 4rpx 16rpx;
+  border-radius: 100rpx;
+}
+.list-badge.red { color: #FF3B30; background: rgba(255, 59, 48, 0.1); }
+.list-badge.orange { color: #FF9500; background: rgba(255, 149, 0, 0.1); }
+
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx 32rpx;
+  border-top: 0.5px solid rgba(60, 60, 67, 0.08);
+  transition: background 0.2s;
+}
+
+.item-hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.item-icon-box {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+.bg-red-light { background: rgba(255, 59, 48, 0.1); }
+.bg-orange-light { background: rgba(255, 149, 0, 0.1); }
+
+.item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+
+.item-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1C1C1E;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 16rpx;
+}
+
+.item-time-box {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.item-time {
+  font-size: 22rpx;
+  color: #8E8E93;
+  margin-right: 4rpx;
+}
+
+.item-desc {
+  font-size: 26rpx;
+  color: #8E8E93;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.empty-state {
+  padding: 56rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #8E8E93;
+  border-top: 0.5px solid rgba(60, 60, 67, 0.08);
+}
+
+.fold-action {
+  border-top: 0.5px solid rgba(60, 60, 67, 0.08);
+  padding: 22rpx 32rpx 26rpx;
+  text-align: center;
+  color: #FF9500;
+  font-size: 26rpx;
+  font-weight: 600;
+}

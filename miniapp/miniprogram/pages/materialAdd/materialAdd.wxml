@@ -1,0 +1,98 @@
+<view class="container pb-space tdesign-theme">
+  <!-- 顶部渐变背景 -->
+  <view class="top-bg"></view>
+
+  <!-- 图片上传卡片 -->
+  <view class="section-card upload-card">
+    <view class="section-header">
+      <t-icon name="image" size="36rpx" color="#5D87FF" />
+      <text class="section-title">物资图片</text>
+      <text class="section-hint">最多1张</text>
+    </view>
+    <view class="upload-area">
+      <t-upload
+        mediaType="{{['image']}}"
+        max="{{1}}"
+        files="{{fileList}}"
+        bind:add="handleAddFile"
+        bind:remove="handleRemoveFile"
+        gridConfig="{{ { column: 4, width: 160, height: 160 } }}"
+      />
+    </view>
+  </view>
+
+  <!-- 基本信息卡片 -->
+  <view class="section-card">
+    <view class="section-header">
+      <t-icon name="info-circle" size="36rpx" color="#5D87FF" />
+      <text class="section-title">基本信息</text>
+    </view>
+    <view class="form-row">
+      <view class="form-label"><text class="required">*</text> 物资名称</view>
+      <t-input borderless bind:change="onNameChange" value="{{form.materialName}}" placeholder="请输入物资名称" />
+    </view>
+    <view class="form-divider"></view>
+    <view class="form-row">
+      <view class="form-label"><text class="required">*</text> 物资分类</view>
+      <t-cell title="{{form.categoryName || '请选择分类'}}" arrow bind:click="showCategoryPicker"
+        t-class="picker-cell {{form.categoryName ? 'has-value' : 'no-value'}}"/>
+    </view>
+    <view class="form-divider"></view>
+    <view class="form-row">
+      <view class="form-label">规格型号</view>
+      <t-input borderless bind:change="onModelChange" value="{{form.model}}" placeholder="请输入规格型号" />
+    </view>
+    <view class="form-divider"></view>
+    <view class="form-row">
+      <view class="form-label"><text class="required">*</text> 计量单位</view>
+      <t-input borderless bind:change="onUnitChange" value="{{form.unit}}" placeholder="例如：件、个、瓶等" />
+    </view>
+  </view>
+
+  <!-- 库存预警卡片 -->
+  <view class="section-card">
+    <view class="section-header">
+      <t-icon name="notification" size="36rpx" color="#FA896B" />
+      <text class="section-title">预警设置</text>
+    </view>
+    <view class="form-row-group">
+      <view class="form-row-half">
+        <view class="form-label">最低库存</view>
+        <t-input type="number" borderless bind:change="onMinStockChange" value="{{form.minStock}}" placeholder="0" />
+      </view>
+      <view class="form-row-half">
+        <view class="form-label">最高库存</view>
+        <t-input type="number" borderless bind:change="onMaxStockChange" value="{{form.maxStock}}" placeholder="无限制" />
+      </view>
+    </view>
+    <view class="form-divider"></view>
+    <view class="form-row">
+      <view class="form-label">有效期预警天数</view>
+      <t-input type="number" borderless bind:change="onExpiryAlertChange" value="{{form.expiryAlertDays}}" placeholder="到期前几天预警" />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="btn-wrap">
+    <t-button block size="large" bind:tap="handleSubmit" t-class="submit-btn">
+      <t-icon name="check" size="36rpx" color="#fff" slot="icon" />
+      提交保存
+    </t-button>
+  </view>
+
+  <!-- 分类选择器 -->
+  <t-picker
+    visible="{{pickerVisible}}"
+    value="{{[currentPickerValue]}}"
+    title="选择物资分类"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    bindchange="onPickerChange"
+    bindconfirm="onPickerConfirm"
+    bindcancel="onPickerCancel"
+  >
+    <t-picker-item options="{{categoryOptions}}" />
+  </t-picker>
+
+  <t-toast id="t-toast" />
+</view>

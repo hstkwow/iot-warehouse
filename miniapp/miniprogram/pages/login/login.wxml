@@ -1,0 +1,37 @@
+<view class="login-container">
+  <view class="bg-blur-circle bg-azure"></view>
+  <view class="bg-blur-circle bg-teal"></view>
+
+  <view class="login-header">
+    <view class="logo-area">
+      <view class="logo-box">
+        <image src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMSAxNlY4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNnoiLz48cG9seWxpbmUgcG9pbnRzPSIzLjI3IDYuOTYgMTIgMTIuMDEgMjAuNzMgNi45NiIvPjxsaW5lIHgxPSIxMiIgeTE9IjIyLjA4IiB4Mj0iMTIiIHkyPSIxMiIvPjwvc3ZnPg==" class="logo-img" mode="aspectFit" />
+      </view>
+    </view>
+    <text class="title">智能仓储系统</text>
+    <text class="subtitle">物联网实时监测平台</text>
+  </view>
+
+  <view class="form-wrapper">
+    <view class="input-group">
+      <view class="input-box">
+        <input class="input-item" type="text" placeholder="账号" bindinput="onUsernameInput" value="{{username}}" placeholder-class="placeholder" />
+      </view>
+    </view>
+
+    <view class="input-group">
+      <view class="input-box">
+        <input class="input-item" type="password" placeholder="密码" bindinput="onPasswordInput" value="{{password}}" placeholder-class="placeholder" />
+      </view>
+    </view>
+
+    <button class="login-btn" loading="{{loading}}" disabled="{{loading}}" bindtap="handleLogin">
+      {{ loading ? '登录中...' : '立即登录' }}
+    </button>
+  </view>
+
+  <view class="footer-tips">
+    <text class="tip-text">还没有账号？</text>
+    <text class="register-text">联系管理员申请</text>
+  </view>
+</view>

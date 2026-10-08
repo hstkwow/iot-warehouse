@@ -1,0 +1,85 @@
+<!-- 动态背景模糊圆点 -->
+<view class="bg-blur-circle bg-blue"></view>
+<view class="bg-blur-circle bg-green" wx:if="{{record.ioType === 1}}"></view>
+<view class="bg-blur-circle bg-orange" wx:else></view>
+
+<view class="container">
+  <!-- 顶部状态卡片 -->
+  <view class="header-card">
+    <view class="header-icon-wrap" style="background: {{record.ioType === 1 ? 'rgba(52,199,89,0.15)' : 'rgba(255,149,0,0.15)'}};">
+      <t-icon name="{{record.ioType === 1 ? 'login' : 'logout'}}" size="80rpx" color="{{record.ioType === 1 ? '#34C759' : '#FF9500'}}"/>
+    </view>
+    <text class="header-type" style="color: {{record.ioType === 1 ? '#34C759' : '#FF9500'}};">{{record.ioType === 1 ? '入库记录' : '出库记录'}}</text>
+    <text class="header-time">{{record.time || '--'}}</text>
+  </view>
+
+  <view class="content-scroll">
+    <!-- 物资信息 -->
+    <view class="section">
+      <view class="section-title">物资信息</view>
+      <view class="glass-card">
+        <view class="info-row">
+          <text class="label">物资名称</text>
+          <text class="value" style="font-weight: 600; color: #1C1C1E;">{{record.materialName || '--'}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">物资编码</text>
+          <text class="value">{{record.materialCode || '--'}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">RFID标签</text>
+          <text class="value highlight">{{record.rfidTag || record.rfid || '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作信息 -->
+    <view class="section">
+      <view class="section-title">操作信息</view>
+      <view class="glass-card">
+        <view class="info-row">
+          <text class="label">操作类型</text>
+          <text class="value" style="font-weight: 500; color: {{record.ioType === 1 ? '#34C759' : '#FF9500'}};">{{record.ioType === 1 ? '入库 (IN)' : '出库 (OUT)'}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">操作数量</text>
+          <text class="value" style="font-weight: 600; font-size: 34rpx; color: {{record.ioType === 1 ? '#34C759' : '#FF9500'}};">{{record.ioType === 1 ? '+' : '-'}}{{record.quantity || 1}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">单据编号</text>
+          <text class="value">{{record.orderNo || '--'}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">操作设备</text>
+          <text class="value">{{record.deviceId || '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 位置信息 -->
+    <view class="section">
+      <view class="section-title">位置信息</view>
+      <view class="glass-card">
+        <view class="info-row">
+          <text class="label">所属区域</text>
+          <text class="value">{{record.zoneName || '--'}}</text>
+        </view>
+        <view class="divider"></view>
+        <view class="info-row">
+          <text class="label">库位名称</text>
+          <text class="value">{{record.locationName || '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 记录ID -->
+    <view class="detail-footer">
+      <text class="text-muted">记录标识: {{record.recordId || record.id || '--'}}</text>
+    </view>
+  </view>
+</view>

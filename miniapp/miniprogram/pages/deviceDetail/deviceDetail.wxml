@@ -1,0 +1,338 @@
+<view class="container">
+  <!-- 动态模糊背景 -->
+  <view class="bg-blur-circle bg-azure"></view>
+  <view class="bg-blur-circle bg-teal"></view>
+
+  <!-- 顶部透明沉浸式背景 -->
+  <view class="header-bg apple-header" style="padding-bottom: 24rpx;">
+    <view class="page-title" style="font-size: 40rpx; display: flex; align-items: center; gap: 16rpx;" bindtap="onBack">
+      <text>设备详情</text>
+    </view>
+  </view>
+
+  <view class="list-wrapper" style="position: relative; z-index: 10;">
+    <!-- 顶部设备信息卡片 -->
+    <view class="apple-card" style="margin: 0 40rpx 32rpx; background: #FFF; border-radius: 32rpx; padding: 32rpx; box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.03); border: 2rpx solid rgba(0,0,0,0.03);">
+      <view class="hero-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32rpx;">
+        <view class="hero-title-row" style="display: flex; align-items: center; gap: 24rpx;">
+          <view class="hero-icon-wrap" style="width: 88rpx; height: 88rpx; border-radius: 28rpx; background: rgba(0,122,255,0.08); display: flex; align-items: center; justify-content: center;">
+            <t-icon name="{{device.deviceType === 'alarm' ? 'notification' : device.deviceType === 'sensor' ? 'control-platform' : 'desktop'}}" size="48rpx" color="#007AFF" />
+          </view>
+          <view>
+            <view class="hero-name" style="font-size: 34rpx; font-weight: 600; color: #1C1C1E; margin-bottom: 6rpx;">{{device.deviceName || device.deviceId}}</view>
+            <view style="font-size: 24rpx; color: #8E8E93; font-family: monospace;">ID: {{device.deviceId}}</view>
+          </view>
+        </view>
+        <view class="status-badge" style="display: flex; align-items: center; gap: 8rpx; padding: 8rpx 20rpx; border-radius: 24rpx; background: {{device.status === 1 ? 'rgba(52,199,89,0.1)' : 'rgba(255,59,48,0.1)'}};">
+          <view class="status-dot" style="width: 12rpx; height: 12rpx; border-radius: 50%; background: {{device.status === 1 ? '#34C759' : '#FF3B30'}}; box-shadow: 0 0 8rpx {{device.status === 1 ? 'rgba(52,199,89,0.5)' : 'rgba(255,59,48,0.5)'}};"></view>
+          <text style="font-size: 24rpx; font-weight: 600; color: {{device.status === 1 ? '#34C759' : '#FF3B30'}};">{{device.status === 1 ? '在线' : '离线'}}</text>
+        </view>
+      </view>
+
+      <!-- 查看模式 -->
+        <view class="device-info-grid" wx:if="{{!editing}}" style="background: #F9F9F9; border-radius: 24rpx; padding: 32rpx; display: flex; flex-direction: column; gap: 24rpx;">
+          <view style="display: flex; justify-content: space-between; align-items: center;">
+            <text style="font-size: 28rpx; color: #8E8E93; font-weight: 500;">设备类型</text>
+            <text style="font-size: 32rpx; font-weight: 600; color: #333333;">{{device.deviceType || '通用'}}</text>
+          </view>
+          <view style="width: 100%; height: 2rpx; background: rgba(0,0,0,0.04);"></view>
+          <view style="display: flex; justify-content: space-between; align-items: center;">
+            <text style="font-size: 28rpx; color: #8E8E93; font-weight: 500;">部署位置</text>
+            <text style="font-size: 32rpx; font-weight: 600; color: #333333;">{{device.location || '未设置'}}</text>
+          </view>
+          <view style="width: 100%; height: 2rpx; background: rgba(0,0,0,0.04);"></view>
+          <view style="display: flex; justify-content: space-between; align-items: center;">
+            <text style="font-size: 28rpx; color: #8E8E93; font-weight: 500;">注册时间</text>
+            <text style="font-size: 32rpx; font-weight: 600; color: #333333; font-family: monospace;">{{device.createTime || '--'}}</text>
+      </view>
+
+      <!-- 操作按钮栏 -->
+      <view class="hero-actions" style="display: flex; gap: 16rpx; padding-top: 16rpx; border-top: 1px dashed rgba(0,0,0,0.06); margin-top: 24rpx; flex-wrap: wrap;">
+        <view class="action-btn" bindtap="startEdit" style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 8rpx; padding: 16rpx 0; background: rgba(0,122,255,0.06); border-radius: 16rpx;">
+          <t-icon name="edit" size="32rpx" color="#007AFF" />
+          <text style="font-size: 26rpx; font-weight: 600; color: #007AFF;">编辑</text>
+        </view>
+        <view class="action-btn" bindtap="openConfigPage" style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 8rpx; padding: 16rpx 0; background: rgba(52,199,89,0.06); border-radius: 16rpx;">
+          <t-icon name="setting" size="32rpx" color="#34C759" />
+          <text style="font-size: 26rpx; font-weight: 600; color: #34C759;">阈值</text>
+        </view>
+        <view class="action-btn" wx:if="{{isAdmin}}" bindtap="openAssignPopup" style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 8rpx; padding: 16rpx 0; background: rgba(255,149,0,0.06); border-radius: 16rpx;">
+          <t-icon name="usergroup" size="32rpx" color="#FF9500" />
+          <text style="font-size: 26rpx; font-weight: 600; color: #FF9500;">分配</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑设备信息弹窗 -->
+  <t-popup visible="{{editing}}" bind:visible-change="cancelEdit" placement="bottom">
+    <view style="background: #FFFFFF; padding: 48rpx; border-radius: 48rpx 48rpx 0 0; z-index: 9999; box-sizing: border-box;">
+      <!-- 弹窗标题 -->
+      <view style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48rpx;">
+        <view style="display: flex; align-items: center; gap: 16rpx;">
+          <view style="width: 10rpx; height: 36rpx; background: #007AFF; border-radius: 6rpx;"></view>
+          <view style="font-size: 40rpx; font-weight: 600; color: #1C1C1E; letter-spacing: 1rpx;">编辑设备</view>
+        </view>
+        <view bind:tap="cancelEdit" style="width: 60rpx; height: 60rpx; background: rgba(0,0,0,0.04); border-radius: 30rpx; display: flex; align-items: center; justify-content: center;">
+          <t-icon name="close" size="40rpx" color="#8E8E93" />
+        </view>
+      </view>
+
+      <!-- 表单列表 -->
+      <view style="display: flex; flex-direction: column; gap: 36rpx; margin-bottom: 64rpx;">
+        <!-- 设备名称 -->
+        <view>
+          <text style="font-size: 26rpx; font-weight: 600; color: #8E8E93; margin-bottom: 16rpx; display: block; padding-left: 12rpx;">设备名称</text>
+          <view style="background: #F4F5F9; border-radius: 28rpx; padding: 8rpx 24rpx; display: flex; align-items: center; position: relative;">
+            <t-icon name="desktop" size="40rpx" color="#007AFF" style="position: absolute; left: 32rpx; opacity: 0.8;" />
+            <t-input value="{{editForm.deviceName}}" placeholder="请输入设备名称" placeholder-style="color: #C7C7CC;" data-field="deviceName" bind:change="onEditInput" borderless style="flex: 1; margin-left: 60rpx; --td-input-bg-color: transparent;" />
+          </view>
+        </view>
+
+        <!-- 设备类型 -->
+        <view>
+          <text style="font-size: 26rpx; font-weight: 600; color: #8E8E93; margin-bottom: 16rpx; display: block; padding-left: 12rpx;">设备类型</text>
+          <view style="background: #F4F5F9; border-radius: 28rpx; padding: 8rpx 24rpx; display: flex; align-items: center; position: relative;">
+            <t-icon name="app" size="40rpx" color="#34C759" style="position: absolute; left: 32rpx; opacity: 0.8;" />
+            <t-input value="{{editForm.deviceType}}" placeholder="请输入设备类型" placeholder-style="color: #C7C7CC;" data-field="deviceType" bind:change="onEditInput" borderless style="flex: 1; margin-left: 60rpx; --td-input-bg-color: transparent;" />
+          </view>
+        </view>
+
+        <!-- 部署位置 -->
+        <view>
+          <text style="font-size: 26rpx; font-weight: 600; color: #8E8E93; margin-bottom: 16rpx; display: block; padding-left: 12rpx;">部署位置</text>
+          <view class="location-picker" bindtap="onShowLocationPicker" style="background: #F4F5F9; border-radius: 28rpx; padding: 32rpx 36rpx; display: flex; justify-content: space-between; align-items: center; position: relative;">
+            <view style="display: flex; align-items: center; gap: 20rpx;">
+              <t-icon name="location" size="40rpx" color="#FF9500" style="opacity: 0.8;" />
+              <text class="{{editForm.location ? 'picker-val' : 'picker-placeholder'}}" style="font-size: 30rpx; font-weight: 500; color: {{editForm.location ? '#1C1C1E' : '#C7C7CC'}};">{{editForm.location || '请选择部署位置'}}</text>
+            </view>
+            <view style="width: 56rpx; height: 56rpx; background: #FFF; border-radius: 28rpx; display: flex; align-items: center; justify-content: center; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);">
+              <t-icon name="chevron-right" size="32rpx" color="#C0C4CC" />
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部按钮 -->
+      <view style="display: flex; gap: 24rpx; padding-bottom: env(safe-area-inset-bottom);">
+        <view bindtap="cancelEdit" style="flex: 1; text-align: center; padding: 28rpx 0; border-radius: 32rpx; font-size: 32rpx; font-weight: 600; color: #8E8E93; background: #F2F2F7; transition: all 0.2s;">取消</view>
+        <view bindtap="saveEdit" style="flex: 2; display: flex; justify-content: center; align-items: center; gap: 12rpx; padding: 28rpx 0; border-radius: 32rpx; font-size: 32rpx; font-weight: 600; color: #FFF; background: linear-gradient(135deg, #007AFF 0%, #0056D6 100%); box-shadow: 0 12rpx 32rpx rgba(0,122,255,0.3); transition: all 0.2s;">
+          <t-icon name="check" size="36rpx" color="#FFF" />
+          <text>保存更改</text>
+        </view>
+      </view>
+    </view>
+  </t-popup>
+
+  <!-- 部署位置选择高级列表弹窗 -->
+  <t-popup visible="{{showLocationPicker}}" bind:visible-change="onLocationCancel" placement="bottom">
+    <view style="background: #FFFFFF; padding: 48rpx; border-radius: 48rpx 48rpx 0 0; z-index: 10000; box-sizing: border-box; max-height: 75vh; display: flex; flex-direction: column;">
+      <!-- 弹窗标题 -->
+      <view style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40rpx; flex-shrink: 0;">
+        <view style="display: flex; align-items: center; gap: 16rpx;">
+          <view style="width: 10rpx; height: 36rpx; background: #FF9500; border-radius: 6rpx;"></view>
+          <view style="font-size: 40rpx; font-weight: 600; color: #1C1C1E; letter-spacing: 1rpx;">选择部署位置</view>
+        </view>
+        <view bind:tap="onLocationCancel" style="width: 60rpx; height: 60rpx; background: rgba(0,0,0,0.04); border-radius: 30rpx; display: flex; align-items: center; justify-content: center;">
+          <t-icon name="close" size="40rpx" color="#8E8E93" />
+        </view>
+      </view>
+
+      <!-- 选项列表 -->
+      <scroll-view scroll-y style="flex: 1; padding-bottom: env(safe-area-inset-bottom); width: 100%;">
+        <view wx:if="{{locationOptions.length === 0}}" style="text-align: center; padding: 80rpx 0; color: #8E8E93; font-size: 28rpx;">
+          暂无可选项，请先在系统中添加库位
+        </view>
+        <view wx:else style="display: flex; flex-direction: column; gap: 24rpx; padding-bottom: 24rpx;">
+          <view wx:for="{{locationOptions}}" wx:key="value" bindtap="onSelectLocationItem" data-value="{{item.value}}" style="display: flex; justify-content: space-between; align-items: center; padding: 32rpx; border-radius: 32rpx; background: {{editForm.location === item.value ? 'rgba(255,149,0,0.05)' : '#F4F5F9'}}; border: 2rpx solid {{editForm.location === item.value ? 'rgba(255,149,0,0.3)' : 'transparent'}}; transition: all 0.2s ease;">
+            <view style="display: flex; align-items: center; gap: 24rpx;">
+              <view style="width: 72rpx; height: 72rpx; border-radius: 36rpx; background: {{editForm.location === item.value ? '#FF9500' : '#E5E5EA'}}; display: flex; justify-content: center; align-items: center; transition: all 0.2s;">
+                <t-icon name="location" size="36rpx" color="{{editForm.location === item.value ? '#FFF' : '#8E8E93'}}" />
+              </view>
+              <text style="font-size: 32rpx; font-weight: {{editForm.location === item.value ? '600' : '500'}}; color: {{editForm.location === item.value ? '#FF9500' : '#1C1C1E'}};">{{item.label}}</text>
+            </view>
+            <view style="width: 48rpx; display: flex; justify-content: center; align-items: center;">
+              <t-icon wx:if="{{editForm.location === item.value}}" name="check-circle-filled" size="48rpx" color="#FF9500" />
+              <view wx:else style="width: 44rpx; height: 44rpx; border-radius: 22rpx; border: 3rpx solid rgba(0,0,0,0.1); box-sizing: border-box;"></view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </t-popup>
+
+  <!-- 管理员：设备分配弹窗 -->
+  <t-popup visible="{{showAssignPopup}}" bind:visible-change="closeAssignPopup" placement="bottom">
+    <view style="background: #FFF; padding: 48rpx; border-radius: 48rpx 48rpx 0 0; min-height: 50vh; z-index: 9999;">
+      <!-- 弹窗标题栏 -->
+      <view style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48rpx;">
+        <view style="display: flex; align-items: center; gap: 16rpx;">
+          <view style="width: 10rpx; height: 36rpx; background: #FF9E0F; border-radius: 6rpx;"></view>
+          <view style="font-size: 40rpx; font-weight: 600; color: #1C1C1E; letter-spacing: 1rpx;">分配设备给用户</view>
+        </view>
+        <view bind:tap="closeAssignPopup" style="width: 60rpx; height: 60rpx; background: rgba(0,0,0,0.04); border-radius: 30rpx; display: flex; align-items: center; justify-content: center;">
+          <t-icon name="close" size="40rpx" color="#8E8E93" />
+        </view>
+      </view>
+
+      <scroll-view scroll-y style="height: 60vh; padding-bottom: env(safe-area-inset-bottom);">
+        <view wx:if="{{assignLoading}}" style="display: flex; justify-content: center; padding: 60rpx 0;">
+          <t-loading theme="circular" size="40rpx" text="加载中..." />
+        </view>
+        <view wx:elif="{{allUsers.length === 0}}" style="text-align: center; padding: 60rpx 0; color: #8E8E93; font-size: 28rpx;">
+          暂无可分配的普通用户
+        </view>
+        <view wx:else>
+          <!-- 1. 已分配用户 -->
+          <view style="margin-bottom: 40rpx;" wx:if="{{assignedUsers.length > 0}}">
+            <view style="font-size: 28rpx; font-weight: 600; color: #34C759; margin-bottom: 16rpx; padding-bottom: 8rpx; border-bottom: 2rpx solid rgba(52,199,89,0.1);">已分配给以下用户</view>
+            <view wx:for="{{assignedUsers}}" wx:key="userId" style="display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid rgba(0,0,0,0.04);">
+              <view style="display: flex; align-items: center; gap: 20rpx;">
+                <view style="width: 72rpx; height: 72rpx; border-radius: 36rpx; background: rgba(52,199,89,0.1); display: flex; align-items: center; justify-content: center;">
+                  <t-icon name="user" size="36rpx" color="#34C759" />
+                </view>
+                <view>
+                  <view style="font-size: 32rpx; font-weight: 500; color: #1C1C1E;">{{item.nickname || item.username}}</view>
+                  <view style="font-size: 24rpx; color: #8E8E93;">@{{item.username}}</view>
+                </view>
+              </view>
+              <view bindtap="onUnassignUser" data-uid="{{item.userId}}" style="padding: 12rpx 24rpx; background: rgba(255,59,48,0.1); color: #FF3B30; font-size: 26rpx; font-weight: 600; border-radius: 30rpx; transition: opacity 0.2s;">
+                收回分配
+              </view>
+            </view>
+          </view>
+          
+          <!-- 2. 未分配用户 -->
+          <view style="margin-bottom: 40rpx;" wx:if="{{unassignedUsers.length > 0}}">
+            <view style="font-size: 28rpx; font-weight: 600; color: #8E8E93; margin-bottom: 16rpx; padding-bottom: 8rpx; border-bottom: 2rpx solid rgba(0,0,0,0.04);">未分配的可选用户</view>
+            <view wx:for="{{unassignedUsers}}" wx:key="userId" style="display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid rgba(0,0,0,0.04);">
+              <view style="display: flex; align-items: center; gap: 20rpx;">
+                <view style="width: 72rpx; height: 72rpx; border-radius: 36rpx; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center;">
+                  <t-icon name="add" size="36rpx" color="#8E8E93" />
+                </view>
+                <view>
+                  <view style="font-size: 32rpx; font-weight: 500; color: #1C1C1E; opacity: 0.8;">{{item.nickname || item.username}}</view>
+                  <view style="font-size: 24rpx; color: #8E8E93;">@{{item.username}}</view>
+                </view>
+              </view>
+              <view bindtap="onAssignUser" data-uid="{{item.userId}}" style="padding: 12rpx 24rpx; background: rgba(0,122,255,0.1); color: #007AFF; font-size: 26rpx; font-weight: 600; border-radius: 30rpx; transition: opacity 0.2s;">
+                分配给他
+              </view>
+            </view>
+          </view>
+          
+          <view wx:if="{{assignedUsers.length === 0 && unassignedUsers.length === 0}}" style="text-align: center; color: #C7C7CC; padding: 40rpx 0;">该系统没有普通用户数据</view>
+        </view>
+      </scroll-view>
+    </view>
+  </t-popup>
+
+  <!-- 操作栏 (LED/蜂鸣器) -->
+  <view class="apple-card" style="margin: 0 40rpx 32rpx; background: #FFF; border-radius: 32rpx; padding: 0 32rpx; box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.03); border: 2rpx solid rgba(0,0,0,0.03); opacity: {{device.status !== 1 ? 0.6 : 1}};">
+    
+    <!-- LED 开关 -->
+    <view style="display: flex; justify-content: space-between; align-items: center; padding: 32rpx 0; border-bottom: 2rpx solid rgba(0,0,0,0.04);">
+      <view style="display: flex; align-items: center; gap: 24rpx;">
+        <view style="width: 72rpx; height: 72rpx; border-radius: 20rpx; background: rgba(52,199,89,0.1); display: flex; align-items: center; justify-content: center;">
+          <t-icon name="lightbulb" size="44rpx" color="#34C759" />
+        </view>
+        <view>
+          <view style="font-size: 32rpx; font-weight: 500; color: #1C1C1E; margin-bottom: 4rpx;">照明指示灯</view>
+          <view style="font-size: 24rpx; color: #8E8E93;">远控打开设备 LED</view>
+        </view>
+      </view>
+      <t-switch value="{{ledOn}}" bind:change="onToggleLed" disabled="{{device.status !== 1 || cmdSending}}" colors="{{['#34C759', '#E5E5EA']}}" />
+    </view>
+
+    <!-- 蜂鸣器 开关 -->
+    <view style="display: flex; justify-content: space-between; align-items: center; padding: 32rpx 0;">
+      <view style="display: flex; align-items: center; gap: 24rpx;">
+        <view style="width: 72rpx; height: 72rpx; border-radius: 20rpx; background: rgba(255,59,48,0.1); display: flex; align-items: center; justify-content: center;">
+          <t-icon name="notification" size="44rpx" color="#FF3B30" />
+        </view>
+        <view>
+          <view style="font-size: 32rpx; font-weight: 500; color: #1C1C1E; margin-bottom: 4rpx;">警报蜂鸣器</view>
+          <view style="font-size: 24rpx; color: #8E8E93;">立即触发声音告警</view>
+        </view>
+      </view>
+      <t-switch value="{{alarmOn}}" bind:change="onToggleAlarm" disabled="{{device.status !== 1 || cmdSending}}" colors="{{['#FF3B30', '#E5E5EA']}}" />
+    </view>
+
+  </view>
+
+  <!-- 传感器数据 -->
+    <view class="apple-card {{device.status !== 1 ? 'section-disabled' : ''}}" style="margin: 0 40rpx 32rpx; background: #FFF; border-radius: 32rpx; padding: 32rpx; box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.03); border: 2rpx solid rgba(0,0,0,0.03);">
+      <view class="section-title" style="display: flex; align-items: center; gap: 12rpx; font-size: 32rpx; font-weight: 600; color: #1C1C1E; margin-bottom: 28rpx;">
+        <t-icon name="chart-bar" size="36rpx" color="{{device.status === 1 ? '#007AFF' : '#C7C7CC'}}" />
+        <text>{{device.status === 1 ? '实时环境数据' : '最后环境数据 (离线)'}}</text>
+      </view>
+      <view class="sensor-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20rpx;">
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(255,149,0,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(255,149,0,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="celsius" size="40rpx" color="{{device.status === 1 ? '#FF9500' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.temperature || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">℃ 温度</text>
+        </view>
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(90,200,250,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(90,200,250,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="cloudy-rain" size="40rpx" color="{{device.status === 1 ? '#5AC8FA' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.humidity || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">% 湿度</text>
+        </view>
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(88,86,214,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(88,86,214,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="dashboard" size="40rpx" color="{{device.status === 1 ? '#5856D6' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.pressure || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">hPa 气压</text>
+        </view>
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(142,142,147,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(142,142,147,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="fog" size="40rpx" color="{{device.status === 1 ? '#8E8E93' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.smokeDensity || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">PPM 烟雾</text>
+        </view>
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(255,204,0,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(255,204,0,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="sunny" size="40rpx" color="{{device.status === 1 ? '#FFCC00' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.luminance || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">Lux 光照</text>
+        </view>
+        <view class="sensor-item" style="display: flex; flex-direction: column; align-items: center; padding: 24rpx 12rpx; background: {{device.status === 1 ? 'rgba(52,199,89,0.04)' : '#F9F9F9'}}; border-radius: 20rpx;">
+          <view class="sensor-icon-wrap" style="width: 72rpx; height: 72rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; background: {{device.status === 1 ? 'rgba(52,199,89,0.1)' : 'rgba(0,0,0,0.04)'}};">
+            <t-icon name="rain-light" size="40rpx" color="{{device.status === 1 ? '#34C759' : '#8E8E93'}}" />
+          </view>
+          <text class="sensor-val" style="font-size: 36rpx; font-weight: 700; color: {{device.status === 1 ? '#1C1C1E' : '#8E8E93'}}; margin-bottom: 4rpx; font-family: monospace;">{{latestData.dewPoint || '--'}}</text>
+          <text class="sensor-unit" style="font-size: 20rpx; color: #8E8E93;">℃ 露点</text>
+    </view>
+  </view>
+
+
+
+    <!-- 卸载/删除设备区 -->
+    <view wx:if="{{isAdmin}}" style="padding: 0 40rpx 60rpx; margin-top: 32rpx; padding-bottom: env(safe-area-inset-bottom);">
+      <view bindtap="onDeleteDevice" style="background: #FFF; border-radius: 32rpx; padding: 32rpx; display: flex; justify-content: center; align-items: center; gap: 16rpx; box-shadow: 0 8rpx 32rpx rgba(255,59,48,0.08); border: 2rpx solid rgba(255,59,48,0.1); transition: all 0.2s;">
+        <t-icon name="delete" size="36rpx" color="#FF3B30" />
+        <text style="font-size: 32rpx; font-weight: 600; color: #FF3B30; letter-spacing: 2rpx;">卸载设备</text>
+      </view>
+    </view>
+
+    <!-- 删除确认弹窗 -->
+    <t-dialog
+      visible="{{showDeleteDialog}}"
+      title="确定要卸载设备吗？"
+      content="卸载后此设备({{device.deviceName || device.deviceId}})将立刻失效并解除绑定，包含传感数据和绑定人员都会断开操作连接，此操作不可恢复。"
+      confirm-btn="确定卸载"
+      cancel-btn="取消"
+      bind:confirm="confirmDelete"
+      bind:cancel="cancelDelete"
+    />
+    <!-- 管理员：配置阈值弹窗 -->
+    <t-toast id="t-toast" />
+    </view> <!-- Close list-wrapper -->
+</view>
+</view>

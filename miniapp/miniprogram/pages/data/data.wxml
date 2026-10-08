@@ -1,0 +1,314 @@
+<view class="analytics-container">
+  <!-- 动态模糊背景 -->
+  <view class="bg-blur-circle bg-azure"></view>
+  <view class="bg-blur-circle bg-teal"></view>
+
+  <!-- 顶部透明沉浸式背景 -->
+  <view class="header-bg apple-header" style="padding-top: {{statusBarHeight + 12}}px; padding-bottom: 24rpx; display: flex; flex-direction: column;">
+    <view class="title-group" style="padding: 0 40rpx; margin-bottom: 32rpx;">
+      <view class="page-title">数据中心</view>
+      <view class="page-subtitle" style="font-size: 26rpx; color: #8E8E93; margin-top: 8rpx; font-weight: 500;">趋势分析 · 数据报表</view>
+    </view>
+
+    <!-- 自定义胶囊 Tab -->
+    <view class="capsule-tabs">
+      <view class="capsule-tab {{activeTab === 0 ? 'capsule-active' : ''}}" data-idx="0" bindtap="onTabTap">
+        <t-icon name="history" size="36rpx" />
+        <text>趋势分析</text>
+      </view>
+      <view class="capsule-tab {{activeTab === 1 ? 'capsule-active' : ''}}" data-idx="1" bindtap="onTabTap">
+        <t-icon name="chart-pie" size="36rpx" />
+        <text>数据报表</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== Tab 1: 数据报表 ========== -->
+  <view wx:if="{{activeTab === 1}}">
+    <view class="section-card">
+      <view class="metric-title" style="margin-bottom: 18rpx;">筛选条件</view>
+      <view class="report-filter-item">
+        <text class="report-filter-label">物资分类</text>
+        <picker mode="selector" range="{{reportCategoryOptions}}" range-key="label" value="{{reportCategoryIndex}}" bindchange="onReportCategoryChange">
+          <view class="report-picker">
+            <text>{{reportCategoryLabel || '请选择分类'}}</text>
+            <t-icon name="chevron-right" size="30rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+      <view class="report-filter-item">
+        <text class="report-filter-label">物资</text>
+        <picker mode="selector" range="{{reportMaterialOptions}}" range-key="label" value="{{reportMaterialIndex}}" bindchange="onReportMaterialChange">
+          <view class="report-picker">
+            <text>{{reportMaterialLabel || '请选择物资'}}</text>
+            <t-icon name="chevron-right" size="30rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+      <view class="report-filter-item" style="margin-bottom: 0;">
+        <text class="report-filter-label">时间范围</text>
+        <view class="report-range-row">
+          <view
+            wx:for="{{reportTimeRanges}}"
+            wx:key="value"
+            class="report-range-tag {{reportSelectedRange === item.value ? 'active' : ''}}"
+            bindtap="onSelectReportRange"
+            data-value="{{item.value}}"
+          >{{item.label}}</view>
+        </view>
+      </view>
+      <view wx:if="{{reportSelectedRange === 'custom'}}" class="report-date-row">
+        <picker mode="date" value="{{reportCustomStartDate}}" bindchange="onReportStartDateChange">
+          <view class="report-date-pill">{{reportCustomStartDate || '开始日期'}}</view>
+        </picker>
+        <text class="report-date-sep">至</text>
+        <picker mode="date" value="{{reportCustomEndDate}}" bindchange="onReportEndDateChange">
+          <view class="report-date-pill">{{reportCustomEndDate || '结束日期'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="report-overview-grid">
+        <view class="report-overview-item">
+          <text class="report-overview-label">总入库次数</text>
+          <text class="report-overview-value in">{{reportInboundCount}}</text>
+        </view>
+        <view class="report-overview-item">
+          <text class="report-overview-label">总出库次数</text>
+          <text class="report-overview-value out">{{reportOutboundCount}}</text>
+        </view>
+        <view class="report-overview-item">
+          <text class="report-overview-label">净流入次数</text>
+          <text class="report-overview-value {{reportNetFlow >= 0 ? 'in' : 'out'}}">{{reportNetFlow}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="detail-header">
+        <text class="metric-title">出入库记录</text>
+        <text class="chart-count">共 {{reportFilteredRecords.length}} 条</text>
+      </view>
+      <view wx:if="{{reportFilteredRecords.length > 0}}">
+        <view wx:for="{{reportFilteredRecords}}" wx:key="recordId" class="report-record-item" bindtap="onReportRecordTap" data-record="{{item}}">
+          <view class="report-row-card">
+            <view class="report-row-left">
+              <view class="report-row-top">
+                <text class="report-row-title">{{item.materialName || '未知物资'}}</text>
+                <view class="report-row-type {{item._ioTypeNum === 1 ? 'in' : 'out'}}">{{item._typeText}}</view>
+              </view>
+              <view class="report-row-sub">
+                <text>{{item._dateText}}</text>
+                <text>·</text>
+                <text>{{item._zoneText}}</text>
+              </view>
+            </view>
+            <view class="report-row-right">
+              <view class="report-row-qty-badge {{item._ioTypeNum === 1 ? 'in' : 'out'}}">
+                <text class="report-row-qty-label">{{item._typeText}}数量</text>
+                <text class="report-row-qty-value">{{item._qtyText}}</text>
+              </view>
+              <t-icon name="chevron-right" size="28rpx" color="#B6BFCD" />
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="report-empty-wrap">
+        <t-empty description="当前条件下暂无出入库记录" />
+        <view class="report-empty-tip">暂无数据</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== Tab 0: 趋势分析 ========== -->
+  <view wx:if="{{activeTab === 0}}">
+    <!-- 设备选择器 -->
+    <view class="section-card" bindtap="onShowDevicePicker">
+      <view class="card-row">
+        <view class="card-label">
+          <t-icon name="desktop" size="40rpx" color="#007AFF" />
+          <text class="label-text">选择设备</text>
+        </view>
+        <view class="card-value">
+          <text>{{selectedDeviceName || '请选择设备'}}</text>
+          <t-icon name="chevron-right" size="32rpx" color="#8E8E93" />
+        </view>
+      </view>
+    </view>
+    <t-picker
+      visible="{{showDevicePicker}}"
+      value="{{devicePickerValue}}"
+      title="选择设备"
+      cancelBtn="取消"
+      confirmBtn="确认"
+      bindchange="onDeviceConfirm"
+      bindcancel="onDeviceCancel"
+    >
+      <t-picker-item options="{{deviceOptions}}"></t-picker-item>
+    </t-picker>
+
+    <!-- 指标与时间范围 -->
+    <view class="section-card" wx:if="{{selectedDeviceId}}" style="padding-bottom: 16rpx;">
+      <view class="metric-header" style="margin-bottom: 16rpx;">
+        <text class="metric-title" style="margin-bottom: 0;">监测指标</text>
+      </view>
+      <scroll-view class="metric-scroll-view" scroll-x="true" show-scrollbar="{{false}}" enhanced="{{true}}" style="margin-bottom: 32rpx;">
+        <view class="metric-tags-scroll">
+          <view
+            wx:for="{{metrics}}"
+            wx:key="key"
+            class="metric-tag {{selectedMetric === item.key ? 'active' : ''}}"
+            bindtap="onSelectMetric"
+            data-key="{{item.key}}"
+            style="padding: 16rpx 36rpx; border-radius: 40rpx; transition: all 0.3s;"
+          >
+            <t-icon name="{{item.icon}}" size="32rpx" style="margin-right: 8rpx;" />
+            <text style="font-size: 28rpx; font-weight: 500;">{{item.label}}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="metric-header" style="margin-bottom: 16rpx;">
+        <text class="metric-title" style="margin-bottom: 0;">时间范围</text>
+      </view>
+      <scroll-view class="time-scroll-view" scroll-x="true" show-scrollbar="{{false}}" enhanced="{{true}}">
+        <view class="time-tags-scroll">
+          <view
+            wx:for="{{timeRanges}}"
+            wx:key="value"
+            class="time-tag {{selectedTimeRange === item.value ? 'active' : ''}}"
+            bindtap="onSelectTimeRange"
+            data-value="{{item.value}}"
+            style="padding: 12rpx 36rpx; border-radius: 36rpx; transition: all 0.3s;"
+          >{{item.label}}</view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 统计卡片 -->
+    <view class="stats-row" wx:if="{{selectedDeviceId}}">
+      <view class="stat-card">
+        <view class="stat-label">当前值</view>
+        <view class="stat-value primary {{currentValue === '无' ? 'stat-value--empty' : ''}}">
+          <text class="stat-value__text">{{currentValue}}</text>
+          <text class="stat-unit {{currentValue === '无' ? 'stat-unit--hidden' : ''}}">{{metricUnit}}</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-label">平均值</view>
+        <view class="stat-value {{avgValue === '无' ? 'stat-value--empty' : ''}}">
+          <text class="stat-value__text">{{avgValue}}</text>
+          <text class="stat-unit {{avgValue === '无' ? 'stat-unit--hidden' : ''}}">{{metricUnit}}</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-label">最高值</view>
+        <view class="stat-value warn {{maxValue === '无' ? 'stat-value--empty' : ''}}">
+          <text class="stat-value__text">{{maxValue}}</text>
+          <text class="stat-unit {{maxValue === '无' ? 'stat-unit--hidden' : ''}}">{{metricUnit}}</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-label">最低值</view>
+        <view class="stat-value success {{minValue === '无' ? 'stat-value--empty' : ''}}">
+          <text class="stat-value__text">{{minValue}}</text>
+          <text class="stat-unit {{minValue === '无' ? 'stat-unit--hidden' : ''}}">{{metricUnit}}</text>
+        </view>
+      </view>
+    </view>
+    <!-- 趋势图（ECharts） -->
+    <view class="section-card chart-card" wx:if="{{selectedDeviceId && !showDevicePicker}}">
+      <view class="chart-header">
+        <text class="metric-title">{{selectedMetricLabel}}趋势图</text>
+        <text class="chart-count">共 {{sensorData.length}} 条数据</text>
+      </view>
+      <view class="chart-wrap">
+        <ec-canvas
+          wx:if="{{!showDatePicker}}"
+          id="trendChart"
+          canvas-id="trendChart"
+          ec="{{ecOption}}"
+        />
+      </view>
+    </view>
+
+    <!-- 数据列表 -->
+    <view class="section-card" wx:if="{{recentRecords.length > 0}}">
+      <view class="detail-header">
+        <text class="metric-title">详细数据</text>
+        <view class="detail-toggle" style="display: flex; align-items: center; color: #8E8E93;">
+          <text style="font-size: 24rpx;">查看详细</text>
+          <t-icon name="chevron-right" size="28rpx" style="margin-left: 2rpx;" />
+        </view>
+      </view>
+      <view class="data-table" style="width: 100%; padding-bottom: 8rpx;">
+        <view wx:for="{{recentRecords}}" wx:key="id" class="recent-record-card" style="background: #F9FAFB; border-radius: 24rpx; padding: 28rpx 32rpx; margin-bottom: 20rpx; display: flex; align-items: center; justify-content: space-between;">
+          <view class="left-info" style="display: flex; flex-direction: column; gap: 8rpx;">
+            <view style="display: flex; align-items: center; gap: 12rpx;">
+              <view style="width: 12rpx; height: 12rpx; border-radius: 50%; background: #34C759;"></view>
+              <text style="font-size: 28rpx; font-weight: 600; color: #1D1D1F;">{{selectedMetricLabel}}更新</text>
+            </view>
+            <text style="font-size: 24rpx; color: #8E8E93; margin-left: 24rpx;">{{item.timeStr}}</text>
+          </view>
+          <view class="right-value" style="display: flex; align-items: baseline;">
+            <text style="font-size: 40rpx; font-weight: 600; font-family: DIN Alternate, -apple-system; color: #007AFF;">{{item.displayValue}}</text>
+            <text style="font-size: 24rpx; color: #8E8E93; margin-left: 8rpx; font-weight: 500;">{{metricUnit}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+<!-- 空状态 -->
+    <view class="empty-wrap" wx:if="{{selectedDeviceId && sensorData.length === 0 && !loading}}">
+      <t-empty description="暂无数据" />
+    </view>
+    <view class="empty-wrap" wx:if="{{!selectedDeviceId}}">
+      <t-empty description="请先选择设备" />
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-wrap" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+  </view>
+
+  <!-- 自定义日期弹窗 -->
+  <t-popup visible="{{showDatePicker}}" bind:visible-change="onCustomDateVisibleChange" placement="bottom" close-btn="{{true}}" z-index="99999">
+    <view class="custom-date-popup">
+      <view class="popup-title">选择时间范围</view>
+      <view class="custom-date-wrap popup-wrap">
+        <view class="date-range-container">
+          <view class="date-box">
+            <text class="date-box-label">开始日期</text>
+            <picker mode="date" value="{{customStartDate}}" bindchange="onStartDateChange">
+              <view class="date-value {{customStartDate ? 'selected' : ''}}">
+                <text>{{customStartDate || '请选择日期'}}</text>
+                <t-icon name="calendar" size="32rpx" color="{{customStartDate ? '#007AFF' : '#C0C4CC'}}" />
+              </view>
+            </picker>
+          </view>
+          
+          <view class="date-separator">
+            <text>至</text>
+          </view>
+          
+          <view class="date-box">
+            <text class="date-box-label">结束日期</text>
+            <picker mode="date" value="{{customEndDate}}" bindchange="onEndDateChange">
+              <view class="date-value {{customEndDate ? 'selected' : ''}}">
+                <text>{{customEndDate || '请选择日期'}}</text>
+                <t-icon name="calendar" size="32rpx" color="{{customEndDate ? '#007AFF' : '#C0C4CC'}}" />
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class="date-btn-row">
+          <view class="date-btn cancel" bindtap="onCustomDateCancel">取消</view>
+          <view class="date-btn confirm" bindtap="onCustomDateConfirm">应用查询</view>
+        </view>
+      </view>
+    </view>
+  </t-popup>
+
+</view>

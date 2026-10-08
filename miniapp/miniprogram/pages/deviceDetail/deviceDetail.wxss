@@ -1,0 +1,63 @@
+/* deviceDetail.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #F4FBF5; /* Apple风格浅绿背景 */
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 动态模糊背景 */
+.bg-blur-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120rpx);
+  opacity: 0.15;
+  z-index: 0;
+}
+.bg-azure {
+  width: 500rpx;
+  height: 500rpx;
+  background-color: #007AFF;
+  top: -150rpx;
+  right: -100rpx;
+}
+.bg-teal {
+  width: 400rpx;
+  height: 400rpx;
+  background-color: #5AC8FA;
+  top: 100rpx;
+  left: -150rpx;
+}
+
+/* ===== 顶部通明 Header ===== */
+.apple-header {
+  padding: 100rpx 40rpx 40rpx;
+  position: relative;
+  z-index: 10;
+}
+.page-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #1C1C1E;
+  letter-spacing: -1rpx;
+}
+
+/* 通用 Apple 卡片 */
+.apple-card {
+  position: relative;
+  z-index: 10;
+}
+
+/* 离线禁用样式 */
+.section-disabled {
+  opacity: 0.6;
+  filter: grayscale(80%);
+}
+
+/* t-input 无边框兼容 */
+.t-input {
+  background: transparent !important;
+}
+

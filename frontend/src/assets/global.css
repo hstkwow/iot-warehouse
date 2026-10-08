@@ -1,0 +1,385 @@
+/* ========================================
+   Art Design Pro Style - Global CSS
+   ======================================== */
+
+/* CSS 变量定义 - 主题配置 */
+:root {
+  /* 主题色 */
+  --primary-color: #5D87FF;
+  --primary-light-1: #7899FF;
+  --primary-light-2: #93ABFF;
+  --primary-light-3: #AEBDFF;
+  --primary-light-4: #C9D0FF;
+  --primary-light-5: #E4E8FF;
+  --primary-light-6: #EFF2FF;
+  --primary-light-7: #F5F7FF;
+  --primary-light-8: #FAFAFF;
+  --primary-light-9: #FCFCFF;
+  --primary-dark-1: #4A6DCC;
+  --primary-dark-2: #3854A3;
+  
+  /* 功能色 */
+  --success-color: #13DEB9;
+  --warning-color: #FFAE1F;
+  --danger-color: #FA896B;
+  --info-color: #539BFF;
+  
+  /* 中性色 */
+  --text-primary: #2A3547;
+  --text-regular: #5A6A85;
+  --text-secondary: #7C8FAC;
+  --text-placeholder: #A1B0CB;
+  --border-color: #E5EAEF;
+  --border-light: #EBEFF4;
+  --bg-page: #F5F7FA;
+  --bg-container: #FAFBFC;
+  --bg-white: #FFFFFF;
+  
+  /* 侧边栏色 */
+  --sidebar-bg: #1E2635;
+  --sidebar-bg-dark: #171E2B;
+  --sidebar-text: #8C9AB4;
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: rgba(93, 135, 255, 0.15);
+  
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  --shadow-card: 0 2px 12px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 8px 24px 0 rgba(93, 135, 255, 0.12);
+  
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* 动画时长 */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+/* 选中文本样式 */
+::selection {
+  background-color: var(--primary-light-4);
+  color: var(--primary-dark-1);
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 路由过渡动画 - 淡入滑动效果 */
+.fade-page-enter-active {
+  transition: all var(--transition-normal) var(--ease-smooth);
+}
+.fade-page-leave-active {
+  transition: all 0.2s var(--ease-smooth);
+}
+.fade-page-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.fade-page-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* ========================================
+   Element UI 组件样式覆盖
+   ======================================== */
+
+/* 卡片通用样式升级 */
+.el-card {
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--bg-white) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: all var(--transition-normal) var(--ease-smooth) !important;
+  overflow: hidden;
+}
+.el-card:hover {
+  box-shadow: var(--shadow-card-hover) !important;
+  transform: translateY(-2px);
+}
+.el-card__header {
+  padding: 16px 20px !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.el-card__body {
+  padding: 20px !important;
+}
+
+/* 按钮样式优化 */
+.el-button {
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-fast) var(--ease-smooth);
+  letter-spacing: 0.3px;
+}
+.el-button--primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light-1) 100%);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(93, 135, 255, 0.35);
+}
+.el-button--primary:hover,
+.el-button--primary:focus {
+  background: linear-gradient(135deg, var(--primary-dark-1) 0%, var(--primary-color) 100%);
+  border-color: var(--primary-dark-1);
+  box-shadow: 0 6px 16px rgba(93, 135, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+/* 输入框样式优化 */
+.el-input__inner {
+  border-radius: var(--radius-md);
+  border-color: var(--border-color);
+  transition: all var(--transition-fast) var(--ease-smooth);
+}
+.el-input__inner:hover {
+  border-color: var(--primary-light-3);
+}
+.el-input__inner:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(93, 135, 255, 0.12);
+}
+
+/* 标签 Tags 优化 */
+.el-tag {
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 500;
+  padding: 0 10px;
+  height: 24px;
+  line-height: 24px;
+}
+.el-tag--success {
+  background: rgba(19, 222, 185, 0.12);
+  color: var(--success-color);
+}
+.el-tag--warning {
+  background: rgba(255, 174, 31, 0.12);
+  color: var(--warning-color);
+}
+.el-tag--danger {
+  background: rgba(250, 137, 107, 0.12);
+  color: var(--danger-color);
+}
+.el-tag--info {
+  background: rgba(83, 155, 255, 0.12);
+  color: var(--info-color);
+}
+
+/* 表格样式优化 */
+.el-table {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.el-table th {
+  background-color: var(--bg-container) !important;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.el-table td, .el-table th {
+  border-bottom-color: var(--border-light) !important;
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: var(--primary-light-9) !important;
+}
+
+/* 对话框样式优化 */
+.el-dialog {
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden;
+}
+.el-dialog__header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-light);
+}
+.el-dialog__title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.el-dialog__body {
+  padding: 24px;
+}
+.el-dialog__footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* 消息提示优化 */
+.el-message {
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-lg);
+}
+
+/* 下拉菜单优化 */
+.el-dropdown-menu {
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+}
+.el-dropdown-menu__item {
+  border-radius: var(--radius-sm);
+  margin: 2px 0;
+  transition: all var(--transition-fast);
+}
+.el-dropdown-menu__item:hover {
+  background-color: var(--primary-light-7);
+  color: var(--primary-color);
+}
+
+/* 开关样式优化 */
+.el-switch.is-checked .el-switch__core {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+}
+
+/* ========================================
+   通用工具类
+   ======================================== */
+   
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light-1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* 全局统一的删除弹窗样式 */
+.app-delete-confirm {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding-bottom: 20px;
+  width: 400px;
+  border: none;
+}
+
+.app-delete-confirm .el-message-box__header {
+  padding-top: 20px;
+}
+
+.app-delete-confirm .el-message-box__title {
+  font-weight: 600;
+  color: #303133;
+  font-size: 18px;
+  justify-content: center; /* Flex alignment if applicable */
+  display: flex !important;
+  align-items: center;
+}
+
+.app-delete-confirm .el-message-box__status {
+  /* Adjust icon position if needed */
+  position: static !important;
+  margin-right: 10px;
+  font-size: 24px !important;
+  transform: none !important;
+}
+/* Center the header content properly */
+.app-delete-confirm .el-message-box__headerbtn {
+    top: 20px; 
+}
+
+.app-delete-confirm .el-message-box__content {
+  padding: 10px 25px 20px;
+  color: #606266;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center; /* Ensure content text is centered */
+}
+
+.app-delete-confirm .el-message-box__btns {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+/* Reverse button order logic if needed, but standard is Cancel | Confirm */
+
+.app-delete-confirm .el-button {
+  border-radius: 6px;
+  padding: 9px 20px;
+  font-weight: 500;
+  margin-left: 0 !important; /* Reset Element UI margin */
+}
+
+.app-delete-confirm .el-button--default:hover {
+  background-color: #f5f7fa;
+  color: #606266;
+  border-color: #dcdfe6;
+}
+

@@ -1,0 +1,62 @@
+<view class="container tdesign-theme pb-space">
+
+  <view class="category-list">
+    <view class="cat-card" wx:for="{{categories}}" wx:key="categoryId">
+      <view class="cat-card-body">
+        <view class="cat-card-info">
+          <view class="cat-card-icon">
+            <t-icon name="folder" size="44rpx" color="#5D87FF" />
+          </view>
+          <view class="cat-card-text">
+            <text class="cat-card-title">{{item.categoryName}}</text>
+            <text class="cat-card-desc">{{item.description || '暂无描述'}}</text>
+          </view>
+        </view>
+        <view class="cat-card-actions">
+          <view class="cat-action-btn" bind:tap="handleEdit" data-item="{{item}}">
+            <t-icon name="edit-1" size="36rpx" color="#5D87FF" />
+          </view>
+          <view class="cat-action-btn" bind:tap="handleDelete" data-item="{{item}}">
+            <t-icon name="delete" size="36rpx" color="#FA896B" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <t-dialog
+    visible="{{dialogVisible}}"
+    title="{{dialogTitle}}"
+    confirm-btn="保存"
+    cancel-btn="取消"
+    bind:confirm="confirmSave"
+    bind:cancel="closeDialog"
+  >
+    <view slot="content" class="dialog-form">
+      <view class="form-item">
+        <text class="item-label">分类名称</text>
+        <t-input borderless bind:change="onNameChange" value="{{formName}}" placeholder="输入分类名称" />
+      </view>
+      <view class="form-item">
+        <text class="item-label">分类描述</text>
+        <t-textarea borderless bind:change="onDescChange" value="{{formDesc}}" placeholder="输入描述(可选)" disableDefaultPadding />
+      </view>
+    </view>
+  </t-dialog>
+
+  <t-dialog
+    visible="{{deleteDialogVisible}}"
+    title="删除确认"
+    content="确定要删除【{{itemToDelete.categoryName}}】吗？此操作不可恢复。"
+    confirm-btn="删除"
+    cancel-btn="取消"
+    bind:confirm="confirmDelete"
+    bind:cancel="closeDeleteDialog"
+  />
+
+  <t-toast id="t-toast" />
+  
+  <view class="fab-btn" bind:tap="handleAdd">
+    <t-icon name="add" size="56rpx" color="#ffffff" />
+  </view>
+</view>

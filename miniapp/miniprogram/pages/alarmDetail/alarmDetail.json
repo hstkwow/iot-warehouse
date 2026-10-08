@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "告警详情",
+  "usingComponents": {
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
+}

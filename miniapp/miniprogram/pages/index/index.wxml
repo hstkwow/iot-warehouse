@@ -1,0 +1,186 @@
+<view class="dashboard">
+  <!-- Apple Vision Pro Ambient Background -->
+  <view class="ambient-light blue"></view>
+  <view class="ambient-light teal"></view>
+
+  <view class="content">
+    
+    <!-- Header Greeting -->
+    <view class="header">
+      <view class="greeting">
+        <text class="greeting-sub">智能仓储管理系统</text>
+        <text class="greeting-main">你好，{{userInfo.nickname || userInfo.username || '管理员'}}</text>
+      </view>
+      <view class="status-pill {{isOnline ? 'online' : 'offline'}}">
+        <view class="dot"></view>
+        <text>{{isOnline ? '系统正常' : '系统离线'}}</text>
+      </view>
+    </view>
+
+    <!-- Overview Grid -->
+    <view class="section-title">实时数据</view>
+    <view class="glass-card">
+      <view class="stat-grid">
+        <view class="stat-item">
+          <view class="stat-icon-wrapper blue-bg">
+            <t-icon name="celsius" size="44rpx" color="#007AFF" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">环境温度</text>
+            <view class="stat-value">{{stats.temperature || "--"}}<text class="unit">℃</text></view>
+          </view>
+        </view>
+        
+        <view class="stat-item">
+          <view class="stat-icon-wrapper green-bg">
+            <t-icon name="cloudy-rain" size="44rpx" color="#34C759" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">环境湿度</text>
+            <view class="stat-value">{{stats.humidity || "--"}}<text class="unit">%</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper teal-bg">
+            <t-icon name="dashboard" size="44rpx" color="#30B0C7" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">大气压强</text>
+            <view class="stat-value">{{stats.pressure || "--"}}<text class="unit">hPa</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper red-bg">
+            <t-icon name="error-circle" size="44rpx" color="#FF3B30" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">烟雾浓度</text>
+            <view class="stat-value">{{stats.smokeDensity || "--"}}<text class="unit">%</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper indigo-bg">
+            <t-icon name="chart-bubble" size="44rpx" color="#5856D6" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">露点温度</text>
+            <view class="stat-value">{{stats.dewPoint || "--"}}<text class="unit">℃</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper yellow-bg">
+            <t-icon name="brightness" size="44rpx" color="#FFCC00" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">光照强度</text>
+            <view class="stat-value">{{stats.luminance || "--"}}<text class="unit">Lux</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper orange-bg">
+            <t-icon name="layers" size="44rpx" color="#FF9500" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">总库存量</text>
+            <view class="stat-value">{{stats.totalStock || "--"}}<text class="unit">件</text></view>
+          </view>
+        </view>
+
+        <view class="stat-item">
+          <view class="stat-icon-wrapper purple-bg">
+            <t-icon name="desktop" size="44rpx" color="#AF52DE" /> 
+          </view>
+          <view class="stat-info">
+            <text class="stat-label">在线设备</text>
+            <view class="stat-value">{{stats.onlineDevices || "--"}}<text class="unit">台</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Alarms Control Header -->
+    <view class="section-header">
+      <text class="section-title">异常动态</text>
+      <!-- iOS Segmented Control -->
+      <view class="ios-segment">
+        <view class="segment-pill {{alarmStatus === 1 ? 'right' : 'left'}}"></view>
+        <view class="segment-btn {{alarmStatus === 0 ? 'active' : ''}}" data-status="0" bind:tap="switchAlarmStatus">待处理</view>
+        <view class="segment-btn {{alarmStatus === 1 ? 'active' : ''}}" data-status="1" bind:tap="switchAlarmStatus">已处理</view>
+      </view>
+    </view>
+    
+    <!-- Environment Alarms -->
+    <view class="glass-card list-card">
+      <view class="list-header">
+        <text class="list-title">环境告警</text>
+        <view class="list-badge red">{{deviceAlarms.length || 0}}</view>
+      </view>
+      <block wx:if="{{deviceAlarms && deviceAlarms.length > 0}}">
+        
+        <view class="list-item" wx:for="{{deviceAlarmsDisplay}}" wx:key="id" bind:tap="goToAlarmDetail" data-type="deviceAlarmsDisplay" data-index="{{index}}" hover-class="item-hover">
+          <view class="item-icon-box bg-red-light">
+            <t-icon name="error-circle-filled" size="44rpx" color="#FF3B30" />
+          </view>
+          <view class="item-content">
+            <view class="item-header">
+              <text class="item-title">{{item.shortTitle || item.alarmType || ' 异常提示'}}</text>
+              <view class="item-time-box">
+                <text class="item-time">{{item.shortTime || '刚刚'}}</text>
+                <t-icon name="chevron-right" size="32rpx" color="#C7C7CC" />
+              </view>
+            </view>
+            <view class="item-desc">{{item.shortDesc || item.content || item.msg}}</view>
+          </view>
+        </view>
+      </block>
+
+      <view wx:else class="empty-state">
+        <text>暂无环境异常记录</text>
+      </view>
+    </view>
+
+    <!-- Stock Alarms -->
+    <view class="glass-card list-card" style="margin-bottom: 40rpx;">
+      <view class="list-header">
+        <text class="list-title">库存预警</text>
+        <view class="list-badge orange">{{stockAlarms.length || 0}}</view>
+      </view>
+      <block wx:if="{{stockAlarms && stockAlarms.length > 0}}">
+        
+        <view class="list-item" wx:for="{{stockAlarmsDisplay}}" wx:key="id" bind:tap="goToAlarmDetail" data-type="stockAlarmsDisplay" data-index="{{index}}" hover-class="item-hover">
+          <view class="item-icon-box bg-orange-light">
+            <t-icon name="info-circle-filled" size="44rpx" color="#FF9500" />
+          </view>
+          <view class="item-content">
+            <view class="item-header">
+              <text class="item-title">{{item.shortTitle || item.alarmType || ' 异常提示'}}</text>
+              <view class="item-time-box">
+                <text class="item-time">{{item.shortTime || '刚刚'}}</text>
+                <t-icon name="chevron-right" size="32rpx" color="#C7C7CC" />
+              </view>
+            </view>
+            <view class="item-desc">{{item.shortDesc || item.content || item.msg}}</view>
+          </view>
+        </view>
+
+        <view
+          wx:if="{{hasMoreStockAlarms || stockAlarmExpanded}}"
+          class="fold-action"
+          bind:tap="toggleStockAlarms"
+        >
+          <text>{{stockAlarmExpanded ? '收起' : '展开全部'}}（{{stockAlarms.length}}）</text>
+        </view>
+      </block>
+
+      <view wx:else class="empty-state">
+        <text>暂无库存预警记录</text>
+      </view>
+    </view>
+
+  </view>
+</view>

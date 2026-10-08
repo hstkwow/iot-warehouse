@@ -1,0 +1,227 @@
+.profile-container {
+  min-height: 100vh;
+  background: #F2F2F7;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 240rpx);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 动态模糊背景 */
+.bg-blur-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+.bg-azure {
+  width: 600rpx;
+  height: 600rpx;
+  background: rgba(0, 122, 255, 0.15);
+  top: -80rpx;
+  left: -120rpx;
+  animation: floatAzure 14s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+.bg-teal {
+  width: 500rpx;
+  height: 500rpx;
+  background: rgba(90, 200, 250, 0.15);
+  bottom: 100rpx;
+  right: -100rpx;
+  animation: floatTeal 16s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  animation-delay: -5s;
+}
+@keyframes floatAzure {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(20rpx, 50rpx) scale(1.05); }
+}
+@keyframes floatTeal {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-30rpx, -40rpx) scale(1.1); }
+}
+
+/* ===== 顶部通明 Header ===== */
+.apple-header {
+  position: relative;
+  z-index: 10;
+}
+.page-title {
+  font-size: 68rpx;
+  font-weight: 700;
+  color: #1D1D1F;
+  letter-spacing: 0.5rpx;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  line-height: 80rpx;
+}
+
+/* 内容区 */
+.content-body {
+  position: relative;
+  z-index: 10;
+}
+
+/* 通用 Apple Inset Grouped 卡片 */
+.section-card {
+  background: rgba(255, 255, 255, 0.65);
+  margin: 0 32rpx 32rpx;
+  border-radius: 36rpx;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* 用户主卡 */
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 40rpx;
+  background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%);
+  margin-top: 20rpx;
+}
+.avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  margin-right: 32rpx;
+  background: #F2F2F7;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08);
+  border: 6rpx solid #FFFFFF;
+}
+.info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.username {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+.name-text {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #1D1D1F;
+}
+.edit-icon-wrap {
+  margin-left: 16rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(0, 122, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.edit-icon-wrap:active { background: rgba(0, 122, 255, 0.2); transform: scale(0.95);  }
+.user-id {
+  font-size: 26rpx;
+  color: #8E8E93;
+  background: rgba(60, 60, 67, 0.04);
+  padding: 6rpx 20rpx;
+  border-radius: 12rpx;
+  align-self: flex-start;
+  font-weight: 500;
+}
+
+/* 统计长条卡片 */
+.stats-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 40rpx;
+}
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1D1D1F;
+  font-family: DIN Alternate, -apple-system, sans-serif;
+  margin-bottom: 6rpx;
+}
+.stat-label {
+  font-size: 24rpx;
+  color: #8E8E93;
+  font-weight: 500;
+}
+.stat-divider {
+  width: 2rpx;
+  height: 48rpx;
+  background: rgba(60, 60, 67, 0.1);
+}
+
+/* 菜单列表卡片 */
+.menu-card {
+  padding: 10rpx 0;
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 40rpx;
+  transition: background 0.2s;
+}
+.menu-hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+.menu-left {
+  display: flex;
+  align-items: center;
+}
+.icon-box {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 28rpx;
+}
+.menu-text {
+  font-size: 32rpx;
+  color: #1D1D1F;
+  font-weight: 500;
+}
+.menu-divider {
+  height: 2rpx;
+  background: rgba(60, 60, 67, 0.05);
+  margin: 0 40rpx 0 132rpx;
+}
+
+/* 退出按钮 */
+.logout-box {
+  margin: 64rpx 32rpx 0;
+}
+.btn-logout {
+  background: rgba(255, 255, 255, 0.65);
+  color: #FF3B30;
+  text-align: center;
+  padding: 30rpx 0;
+  border-radius: 32rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.2s;
+}
+.logout-hover {
+  background: rgba(255, 59, 48, 0.05);
+  transform: scale(0.98);
+}
+
+.footer-copy {
+  text-align: center;
+  font-size: 22rpx;
+  color: #C0C4CC;
+  margin-top: 40rpx;
+  letter-spacing: 1rpx;
+}
